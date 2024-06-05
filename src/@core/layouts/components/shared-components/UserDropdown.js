@@ -84,7 +84,7 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
             data: `select username,role,userid,lastlogin, lastupdate from users where sessionid = '${userSession}'`,
           };
 
-          const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/userSession?${new URLSearchParams(query)}`, {
+          const response = await fetch(`${config.apiBaseUrl}/api/userSession?${new URLSearchParams(query)}`, {
 
             method: 'POST',
             headers: {

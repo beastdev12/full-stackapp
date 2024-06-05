@@ -18,18 +18,28 @@ import { styled, useTheme } from '@mui/material/styles';
 
 const fetchData = async (request) => {
   try {
-    const query = { data: request };
+    
+    const query = { 
+      data: request };
+
     const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
     });
+    
     const jsonData = await response.json();
-    return jsonData;
+    
+    
+return jsonData;
+
   } catch (error) {
+    
     console.error('Error fetching data:', error);
-    return null;
+    
+return null;
   }
 };
 
@@ -55,36 +65,52 @@ const DividerHorizontal = styled(MuiDivider)(({ theme }) => ({
 }));
 
 const DividerTableCell = styled(TableCell)(({ theme }) => ({
+  
   borderRight: `1px solid ${theme.palette.divider}`
+  
 }));
+
 const DividerTableCellHead = styled(TableCell)(({ theme }) => ({
+  
   borderRight: `1px solid ${theme.palette.grey[50]}`,
 }));
+
 const DividerTableCellSubHead = styled(TableCell)(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.grey[50]}`,
   borderTop: `1px solid ${theme.palette.grey[50]}`
 }));
 
 const TableStickyHeader = () => {
+  
   const router = useRouter();
+  
   const theme = useTheme();
+  
   const [data, setData] = useState([]);
+  
   const [columns, setColumns] = useState([]);
+  
   const [rows, setRows] = useState([]);
+  
   const [page, setPage] = useState(0);
+  
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  
 
   useEffect(() => {
+    
     const fetchInitialData = async () => {
-      // Fetch all locations
+     
       const locationData = await fetchData("SELECT * FROM location");
-      // Fetch products data
+
+      
       const productsData = await fetchData("SELECT * FROM products ORDER BY updatedDate DESC, stock DESC");
 
       if (productsData && locationData) {
         const locationMap = locationData.reduce((acc, loc) => {
           acc[loc.locationid] = loc.address;
-          return acc;
+          
+return acc;
         }, {});
 
         const updatedRows = productsData.reduce((acc, product) => {
@@ -110,14 +136,18 @@ const TableStickyHeader = () => {
         ];
 
         setData(productsData);
+        
         setRows(updatedRows);
+        
         setColumns(dynamicColumns);
+        
       }
     };
 
     fetchInitialData();
-    const interval = setInterval(fetchInitialData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
+    const interval = setInterval(fetchInitialData, 20 * 1000);
+    
+return () => clearInterval(interval);
   }, []);
 
   const handleChangePage = (event, newPage) => {
@@ -130,15 +160,21 @@ const TableStickyHeader = () => {
   };
 
   const groupedColumns = columns.reduce((acc, column) => {
+    
     if (column.locationName) {
+      
       if (!acc[column.locationName]) {
+        
         acc[column.locationName] = [];
       }
       acc[column.locationName].push(column);
+      
     } else {
+      
       acc[column.id] = [column];
     }
-    return acc;
+    
+return acc;
   }, {});
 
   const handleonItemClick = () => {
@@ -154,6 +190,7 @@ const TableStickyHeader = () => {
             <TableRow color={theme.palette.primary.main} sx={{backgroundColor:theme.palette.primary}}>
             {columns.map(column => {
               if (column.id==`${column.group}_stock`){
+                
                 return (
                   <DividerTableCellHead key={column.id} align={column.align} colSpan={2} sx={{ maxWidth:(column.minWidth-column.minWidth/2), background:theme.palette.primary.main, color:theme.palette.grey[50]}}>
                     {column.group}
@@ -161,6 +198,7 @@ const TableStickyHeader = () => {
                 );
               }
               if(column.id=='name'){
+                
                 return (
                   <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth*1, background:theme.palette.primary.main, color:theme.palette.grey[50], }}>
                     Location
@@ -172,6 +210,7 @@ const TableStickyHeader = () => {
             <TableRow color={theme.palette.primary.main} sx={{backgroundColor:theme.palette.primary}}>
               {columns.map(column => {
                 if (column.id =="name"){
+                  
                   return (
                     <DividerTableCellSubHead  key={column.id} align={column.align} sx={{ minWidth: column.minWidth*1.3, background:theme.palette.primary.main, color:theme.palette.grey[50] }}>
                       {column.label}
@@ -179,6 +218,7 @@ const TableStickyHeader = () => {
                   )
                 }
                 else{
+                  
                   return (
                     <DividerTableCellSubHead  key={column.id} align={column.align} sx={{ minWidth: column.minWidth*0.8, background:theme.palette.primary.main, color:theme.palette.grey[50] }}>
                       {column.label}
@@ -194,6 +234,7 @@ const TableStickyHeader = () => {
               <TableRow action={handleonItemClick} hover role='checkbox' tabIndex={-1} key={rowIndex}>
                 {columns.map(column => {
                   const value = row[column.id];
+                  
                   return (
                     <DividerTableCell key={column.id} align={column.align} >
                     {value}

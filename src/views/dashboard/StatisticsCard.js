@@ -24,17 +24,19 @@ import { CurrencyInr } from 'mdi-material-ui'
 
 
 
-const connector = (request) => {
+const Connector = (request) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const query = {
           data: request,
         };
+
         const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
-          method: 'POST',
+                    method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Content-Length': 700
@@ -48,9 +50,12 @@ const connector = (request) => {
     };
 
     fetchData();
+
     const interval = setInterval(fetchData, 20 *1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
-  }, []);
+    
+  return () => clearInterval(interval);
+
+  }, [request]);
 
   return data;
 };
@@ -91,8 +96,7 @@ const StatisticsCard = () => {
   var data = null;
   data = connector('SELECT Sum(stock) from products where stock !=0 or stock is not null');
   if (data && data.length > 0) {
-    // Access the value of "COUNT(product)" property of the first object in the array
-    console.log(data);
+
     const count = data[0]["Sum(stock)"];
     totalStock = count-1;
   }
@@ -105,7 +109,7 @@ const StatisticsCard = () => {
       icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
     }
   ]
-  //console.log(test);
+
   return (
     <Card>
       <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important`, mb:-2 }}>

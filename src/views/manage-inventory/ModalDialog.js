@@ -33,6 +33,7 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const session = sessionStorage.getItem('userSession')
+
   //** States 
   const [productInputPrice, setProductInputPrice] = useState(title[content.trim()]);
   const dialogRef = useRef(null);
@@ -66,6 +67,7 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
       });
       console.log(query.data)
     }
+
     const updateQueryPOST= () => {
       const query = {
         // Define your query parameters here
@@ -101,6 +103,7 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
   if (open && dialogRef.current) {
     dialogRef.current.showModal()
   };
+
   const handlePriceInputChange = (event) => {
     const input = event.target.value;
     setProductInputPrice(input);

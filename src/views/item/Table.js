@@ -58,7 +58,7 @@ const DashboardTable = () => {
         setTableData(rows);
       }
 
-  }, []);
+  }, [userData]);
 
   const columns = [
     {
@@ -134,7 +134,8 @@ const DashboardTable = () => {
                         </TableCell>
                       )
                     }
-                    return (
+                    
+return (
                       <TableCell key={column.id} align={column.align}>
                         {column.format && typeof value === 'number' ? column.format(value) : value}
                       </TableCell>

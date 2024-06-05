@@ -52,10 +52,14 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
   }
 
   const router = useRouter();
+
     // ** States
     const [username, setUsername] = useState(null);
+    
     const [userRole, setUserRole] = useState(null);
+
     const [anchorEl, setAnchorEl] = useState(null)
+
     const [userSession, setUserSession] = useState(null);
 
     // ** Hooks
@@ -66,17 +70,22 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
       if (isAuthenticated && session) {
         
       }
+      
     }, [isAuthenticated]);
     
     const handleDropdownOpen = event => {
+      
       setAnchorEl(event.currentTarget)
+
       const fetchData = async () => {
+
         try {
           const query = {
             data: `select username,role,userid,lastlogin, lastupdate from users where sessionid = '${userSession}'`,
           };
 
           const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/userSession?${new URLSearchParams(query)}`, {
+
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -85,9 +94,13 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
           });
           
           const data = await response.json();
+
           if (data && data.length > 0) {
+
             setUsername(data[0].username);
+
             setUserRole(data[0].role);
+
           } else {
             console.log('No user data found for the session', data, query.data);
           }
@@ -108,7 +121,6 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
     const handleLogout = () =>{
       setIsAuthenticated(false);
     }
-  
 
   return (
     <Fragment>

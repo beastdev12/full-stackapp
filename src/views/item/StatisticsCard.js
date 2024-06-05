@@ -42,8 +42,9 @@ const StatisticsCard = () => {
     }
     fetchInitialData();
     const interval = setInterval(fetchInitialData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
-  }, []);
+    
+return () => clearInterval(interval);
+  }, [userData]);
 
   useEffect(() => {
     const fetchInitialData = () => {const stats = userData.map( (data, index) => ({
@@ -55,8 +56,9 @@ const StatisticsCard = () => {
     }
     fetchInitialData();
     const interval = setInterval(fetchInitialData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
-  }, []);
+    
+return () => clearInterval(interval);
+  }, [userData]);
 
   const renderStats = () => {
     return renderData.map((item, index) => (
@@ -83,7 +85,8 @@ const StatisticsCard = () => {
       </Grid>
     ))
   }
-  return (
+  
+return (
     <Card>
       <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important`, marginTop: 1}}>
         <Grid container spacing={[5, 0]}>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+
 const mysql = require('mysql');
+
 import config  from 'config.js';
 
 // ** MUI Imports
@@ -24,7 +26,7 @@ import { CurrencyInr } from 'mdi-material-ui'
 
 
 
-const connector = (request) => {
+const Connector = (request) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -33,6 +35,7 @@ const connector = (request) => {
         const query = {
           data: request,
         };
+
         const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
@@ -49,8 +52,9 @@ const connector = (request) => {
 
     fetchData();
     const interval = setInterval(fetchData, 20 *1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
-  }, []);
+    
+return () => clearInterval(interval);
+  }, [request]);
 
   return data;
 };
@@ -89,19 +93,19 @@ const StatisticsCard = () => {
   var Average30 = 0;
   var Average45 = 0;
   var data = null;
-  data = connector('Select Sum(distinct(stock)) as tStock from products where product is not NULL');
+  data = Connector('Select Sum(distinct(stock)) as tStock from products where product is not NULL');
   if (data && data.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     const count = data[0]["tStock"];
     totalStock = count;
   }
-  data = connector("Select SUM(distinct(stock*saleprice)) as valuation from products WHERE saleprice != NULL OR saleprice != '' OR saleprice != ' ' ");
+  data = Connector("Select SUM(distinct(stock*saleprice)) as valuation from products WHERE saleprice != NULL OR saleprice != '' OR saleprice != ' ' ");
   if (data && data.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     const count = data[0]['valuation'];
     Average30 = count.toFixed(2);
   }
-  data = connector("Select SUM(distinct(stock*previoussaleprice)) as valuation from products WHERE previoussaleprice != NULL OR previoussaleprice != '' OR previoussaleprice != ' ' ");
+  data = Connector("Select SUM(distinct(stock*previoussaleprice)) as valuation from products WHERE previoussaleprice != NULL OR previoussaleprice != '' OR previoussaleprice != ' ' ");
   if (data && data.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     const count = data[0]['valuation'];
@@ -124,6 +128,7 @@ const StatisticsCard = () => {
       trendNumber:(((Average30-Average45)/(Average45===0? 1:Average45))*100).toFixed(1)+"%"
     }
   ]
+
   //console.log(test);
   return (
     <Card>

@@ -21,6 +21,7 @@ const TrophyImg = styled('img')({
 })
 
 const Trophy = ({ data }) => {
+  
   const theme = useTheme()
   const imageSrc = theme.palette.mode === 'light' ? 'triangle-light.png' : 'triangle-dark.png'
   
@@ -31,6 +32,7 @@ const Trophy = ({ data }) => {
 
   useEffect(() => {
     const InitializeData = async () => {
+
       if (data) {
         if (data.productsData) {
           const { productsData } = data;
@@ -40,7 +42,9 @@ const Trophy = ({ data }) => {
     };
 
     InitializeData();
-    const interval = setInterval(InitializeData, 20 * 1000); // Fetch data every 20 seconds
+
+    const interval = setInterval(InitializeData, 20 * 1000);
+    
     return () => clearInterval(interval);
   }, [data]);
 

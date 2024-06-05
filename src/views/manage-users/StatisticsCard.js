@@ -38,7 +38,8 @@ const StatisticsCard = () => {
     }
     fetchInitialData();
     const interval = setInterval(fetchInitialData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
+    
+return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

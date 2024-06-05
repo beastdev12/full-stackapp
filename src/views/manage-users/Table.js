@@ -111,7 +111,8 @@ const DashboardTable = () => {
                       </TableCell>
                     );
                   }
-                  return (
+                  
+return (
                     <TableCell key={column.id} align={column.align}>
                       {value}
                     </TableCell>

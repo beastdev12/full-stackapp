@@ -25,6 +25,7 @@ import ModalDialog from './ModalDialog';
 const fetchData = async (request) => {
   try {
     const query = { data: request };
+
     const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
@@ -32,19 +33,23 @@ const fetchData = async (request) => {
       },
     });
     const jsonData = await response.json();
-    return jsonData;
+    
+return jsonData;
   } catch (error) {
     console.error('Error fetching data:', error);
-    return null;
+    
+return null;
   }
 };
 
 const DividerTableCell = styled(TableCell)(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`
 }));
+
 const DividerTableCellHead = styled(TableCell)(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.grey[50]}`,
 }));
+
 const DividerTableCellSubHead = styled(TableCell)(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.grey[50]}`,
   borderTop: `1px solid ${theme.palette.grey[50]}`
@@ -68,13 +73,15 @@ const TableStickyHeader = () => {
     const fetchInitialData = async () => {
       // Fetch all locations
       const locationData = await fetchData("SELECT * FROM location");
+
       // Fetch products data
       const productsData = await fetchData("SELECT * FROM products ORDER BY updatedDate DESC, stock DESC");
 
       if (productsData && locationData) {
         const locationMap = locationData.reduce((acc, loc) => {
           acc[loc.locationid] = loc.address;
-          return acc;
+          
+return acc;
         }, {});
 
         const updatedRows = productsData.reduce((acc, product) => {
@@ -108,7 +115,8 @@ const TableStickyHeader = () => {
               stocksum += element.stock;
             }
           });
-          return {
+          
+return {
             locationAddress: location.address,
             locationStock: stocksum,
             locationPrice: pricesum
@@ -124,7 +132,8 @@ const TableStickyHeader = () => {
 
     fetchInitialData();
     const interval = setInterval(fetchInitialData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
+    
+return () => clearInterval(interval);
   }, []);
 
   const handleChangePage = (event, newPage) => {
@@ -145,7 +154,8 @@ const TableStickyHeader = () => {
     } else {
       acc[column.id] = [column];
     }
-    return acc;
+    
+return acc;
   }, {});
 
   const handleonItemClick = (item) => {
@@ -234,7 +244,8 @@ const TableStickyHeader = () => {
                 {columns.map(column => {
                   if (column.label=="Price"){
                     const value = row[column.id];
-                  return (
+                  
+return (
                     <DividerTableCell
                     onClick={() => handlePriceClick(row, column.id)}
                      key={column.id} align={column.align}>
@@ -244,7 +255,8 @@ const TableStickyHeader = () => {
                   }
                   else {
                     const value = row[column.id];
-                    return (
+                    
+return (
                       <DividerTableCell
                       onClick={() => handleonItemClick(row.name)}
                        key={column.id} align={column.align}>

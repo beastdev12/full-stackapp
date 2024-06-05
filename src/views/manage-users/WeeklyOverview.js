@@ -69,6 +69,7 @@ const WeeklyOverview = () => {
       //categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       tickPlacement: 'on',
       labels: { show: false },
+
       //axisTicks: { show: false },
       axisBorder: { show: false }
     },

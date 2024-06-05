@@ -33,20 +33,26 @@ const clientSideEmotionCache = createEmotionCache()
 // ** Pace Loader
 if (themeConfig.routingLoader) {
   Router.events.on('routeChangeStart', () => {
+
     NProgress.start()
   })
   Router.events.on('routeChangeError', () => {
+
     NProgress.done()
   })
   Router.events.on('routeChangeComplete', () => {
+
     NProgress.done()
   })
 }
 
 // ** Configure JSS & ClassName
 const App = props => {
+
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+
   const router = useRouter();
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
@@ -60,7 +66,7 @@ const App = props => {
     };
 
     checkAuth();
-  }, []);
+  }, [isAuthenticated, router]);
 
   // Variables
   const getLayout = Component.getLayout ?? (page => <UserLayout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>{page}</UserLayout>)
@@ -80,6 +86,7 @@ const App = props => {
       <SettingsProvider>
         <SettingsConsumer>
           {({ settings }) => {
+            
             return <ThemeComponent settings={settings} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>{getLayout(<Component isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} {...pageProps} />)}</ThemeComponent>
           }}
         </SettingsConsumer>

@@ -33,7 +33,8 @@ const fetchData = async (request, setData) => {
   }
 };
 
-const navigation = (isAuthenticated) => {
+const Navigation = ({isAuthenticated}) => {
+
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -44,7 +45,8 @@ const navigation = (isAuthenticated) => {
       };
       fetchUserData();
       const interval = setInterval(fetchUserData, 20 * 1000); // Fetch data every 20 seconds
-      return () => clearInterval(interval);
+      
+return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
 
@@ -158,6 +160,7 @@ const navigation = (isAuthenticated) => {
 
   // Handle the case where userData is not yet available
   if (!userData || userData.length === 0) {
+
     return [];
   }
 
@@ -167,4 +170,4 @@ const navigation = (isAuthenticated) => {
   return getNavigationItems(userRole);
 };
 
-export default navigation;
+export default Navigation;

@@ -17,6 +17,7 @@ import { userInfo } from 'os';
 const fetchData = async (request) => {
   try {
     const query = { data: request };
+
     const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
@@ -24,11 +25,13 @@ const fetchData = async (request) => {
       },
     });
     const jsonData = await response.json();
-    return jsonData;
+    
+return jsonData;
     console.log(jsonData);
   } catch (error) {
     console.error('Error fetching data:', error);
-    return null;
+    
+return null;
   }
 };
 
@@ -64,7 +67,8 @@ const TableStickyHeader = () => {
         const updatedRows = await Promise.all(productsData.map(async (item) => {
           const locationID = item.locationid;
           const locationData = locationID ? await fetchData(`SELECT address FROM location WHERE locationid = '${locationID}'`) : null;
-          return {
+          
+return {
             name: item.Product,
             stock: item.Stock,
             date: new Date(item.updatedDate).toLocaleDateString(),
@@ -80,7 +84,8 @@ const TableStickyHeader = () => {
 
     fetchInitialData();
     const interval = setInterval(fetchInitialData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
+    
+return () => clearInterval(interval);
   }, []);
 
   const [page, setPage] = useState(0);
@@ -136,7 +141,8 @@ const TableStickyHeader = () => {
                         </TableCell>
                       );
                     }
-                    return (
+                    
+return (
                       <TableCell key={column.id} align={column.align}>
                         {column.format && typeof value === 'number' ? column.format(value) : value}
                       </TableCell>

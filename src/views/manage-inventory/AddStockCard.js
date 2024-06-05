@@ -35,7 +35,7 @@ const currencies = [
 
 
 const AddStockCard = ({ isOpen, onClose }) => {
-  const connector = (request) => {
+  const Connector = (request) => {
     const [data, setData] = useState(null);
   
     useEffect(() => {
@@ -58,7 +58,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-    }, []);
+    }, [request]);
   
     return data
   };
@@ -75,35 +75,38 @@ const AddStockCard = ({ isOpen, onClose }) => {
   let locations = [];
   let locationExists = false;
   
-  const dataCallForProducts = connector('Select product from products order by product');
+  const dataCallForProducts = Connector('Select product from products order by product');
   if (dataCallForProducts && dataCallForProducts.length > 0) {
-    // Access the value of "COUNT(product)" property of the first object in the array
+    
     products = dataCallForProducts.map(item => item['product']);
   }
-  const dataCallForLocations = connector('Select locationid from location order by locationid');
+  const dataCallForLocations = Connector('Select locationid from location order by locationid');
   if (dataCallForLocations && dataCallForLocations.length > 0) {
-    // Access the value of "COUNT(product)" property of the first object in the array
+    
     locations = dataCallForLocations.map(item => item['locationid']);
   }
 
   const handleProductCheck = () => {
     for ( var i=0; i< products.length; i++){
       if (productInputValue == products[i]){
-        console.log(productInputValue);
-        return true
+          
+      return true
       }
       else{
+
         return false
       }
     }
   }
+
   const handleLocationCheck = () => {
     for ( var i=0; i< locations.length; i++){
       if (locationInputValue == locations[i]){
-        console.log(locationInputValue);
+        
         return true
       }
       else{
+
         return false
       }
     }
@@ -120,7 +123,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
     );
 
     // Set suggestions
-    setProductSuggestions(filteredSuggestions.slice(0, 5)); // Show top 5 suggestions
+    setProductSuggestions(filteredSuggestions.slice(0, 5));
   };
 
   const handleProductSuggestionClick = (suggestion) => {
@@ -134,41 +137,44 @@ const AddStockCard = ({ isOpen, onClose }) => {
     setLocationInputValue(input);
 
     // Filter suggestions based on input
+    
     const filteredSuggestions = locations.filter(
       suggestion =>
         suggestion.toLowerCase().indexOf(input.toLowerCase()) > -1
     );
+
     // Set suggestions
     setLocationSuggestions(filteredSuggestions.slice(0, 5).length > 0 ? filteredSuggestions.slice(0, 5): sampleLocations); // Show top 5 suggestions
   };
 
-  const handleLocationSuggestionClick = (suggestion) => {
-    setLocationInputValue(suggestion);
-    setLocationSuggestions([]);
+  const handleLocationSuggestionClick = (suggestion) => {//
+    setLocationInputValue(suggestion);//
+    setLocationSuggestions([]);//
   };
 
-  const handleAmountInputChange = (event) => {
-    const input = event.target.value;
-    setAmountInputValue(input);
+  const handleAmountInputChange = (event) => {//
+    const input = event.target.value;//
+    setAmountInputValue(input);//
   };
-  const handleCostInputChange = (event) => {
-    const input = event.target.value;
-    setCostInputValue(input);
+
+  const handleCostInputChange = (event) => {//
+    const input = event.target.value;//
+    setCostInputValue(input);//
   };
 
   const handleOnAdd = () => {
     
     const session = sessionStorage.getItem('userSession')
     if (handleProductCheck() && amountInputValue && handleLocationCheck()) {
-      console.log('entry ADDED')
+      
       
       const addQueryPOST= () => {
         const query = {
-          // Define your query parameters here
+          
           data: `Update products set stock=${amountInputValue}+stock, updatedDate=curDate(), updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
         };
       
-        // Make a POST request to your Express server endpoint
+        
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
@@ -177,16 +183,17 @@ const AddStockCard = ({ isOpen, onClose }) => {
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
+          
         })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
-        console.log(query.data)
+        
       }
+
       const updateQueryPOST= () => {
         const query = {
-          // Define your query parameters here
+          
           data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where sessionid='${session}'), '${locationInputValue}', 'ADD', ${amountInputValue}, '${productInputValue}')`,
         };
         
@@ -199,12 +206,12 @@ const AddStockCard = ({ isOpen, onClose }) => {
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data.error);
+          
         })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
-        console.log(query.data)
+        
       }
   
       addQueryPOST();
@@ -213,9 +220,10 @@ const AddStockCard = ({ isOpen, onClose }) => {
       return onClose();
     }
     else if(productInputValue in products){
-      console.log('yes')
+      
     }
     else{
+      
       return onClose(); 
     }
   }

@@ -24,6 +24,7 @@ const statusObj = {
 
 // Styled Divider component
 const Divider = styled(MuiDivider)(({ theme }) => ({
+  
   margin: theme.spacing(5, 0),
   borderRight: `1px solid ${theme.palette.divider}`,
   [theme.breakpoints.down('md')]: {
@@ -32,7 +33,9 @@ const Divider = styled(MuiDivider)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`
   }
 }));
+
 const DividerHorizontal = styled(MuiDivider)(({ theme }) => ({
+  
   margin: theme.spacing(-2, 0, 2, 0),
   orientation:'horizontal',
   borderTop: `1px solid ${theme.palette.divider}`,
@@ -44,25 +47,34 @@ const DividerHorizontal = styled(MuiDivider)(({ theme }) => ({
 }));
 
 const DepositWithdraw = () => {
+  
   const theme = useTheme();
+  
   const router = useRouter();
+  
   const Selecteditem = router.query.item;
-  console.log(Selecteditem);
+  
+  
 
   const [depositData, setDepositData] = useState([]);
+  
   const [withdrawData, setWithdrawData] = useState([]);
 
   const fetchData = async (query) => {
     try {
+      
       const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams({ data: query })}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
       });
+      
       const data = await response.json();
-      return data;
+
+    return data;
     } catch (error) {
+      
       console.error('Error fetching data:', error);
       throw error;
     }
@@ -70,14 +82,21 @@ const DepositWithdraw = () => {
 
   useEffect(() => {
     const fetchDepositData = async () => {
+      
       try {
+        
         const data = await fetchData("SELECT * FROM updatelog WHERE type = 'ADD' order by date desc, time desc");
+
         const processedData = await Promise.all(data.map(async (item) => {
+          
           if(item.product === Selecteditem){
+            
             const productData = await fetchData(`SELECT product FROM products WHERE product = '${item.product}'`);
             const UserData = await fetchData(`SELECT username, LOWER(role) AS role FROM users WHERE ${item.userid ? `userid = '${item.userid}'` : 'userid IS NULL'}`);
             const LocationData = await fetchData(`SELECT * FROM location WHERE ${item.locationid ? `locationid = '${item.locationid}'` : 'locationid IS NULL'}`);
-            return {
+
+          return {
+            
               name: productData[0]?.product || 'Sample',
               amount: item?.amount || 0,
               user: UserData[0]?.username || 'default',
@@ -86,9 +105,12 @@ const DepositWithdraw = () => {
             };
           }
         }));
+        
         const filteredData = processedData.filter(item => item !== undefined);
+        
         setWithdrawData(filteredData);
       } catch (error) {
+        
         console.error('Error fetching withdraw data:', error);
       }
     };
@@ -96,12 +118,17 @@ const DepositWithdraw = () => {
     const fetchWithdrawData = async () => {
       try {
         const data = await fetchData("SELECT * FROM updatelog WHERE type = 'REMOVE' order by date desc, time desc");
+
         const processedData = await Promise.all(data.map(async (item) => {
+          
           if(item.product === Selecteditem){
+            
             const productData = await fetchData(`SELECT product FROM products WHERE product = '${item.product}'`);
             const UserData = await fetchData(`SELECT username, LOWER(role) AS role FROM users WHERE ${item.userid ? `userid = '${item.userid}'` : 'userid IS NULL'}`);
             const LocationData = await fetchData(`SELECT * FROM location WHERE ${item.locationid ? `locationid = '${item.locationid}'` : 'locationid IS NULL'}`);
-            return {
+
+          return {
+            
               name: productData[0]?.product || 'Sample',
               amount: item?.amount || 0,
               user: UserData[0]?.username || 'default',
@@ -110,22 +137,30 @@ const DepositWithdraw = () => {
             };
           }
         }));
+        
         const filteredData = processedData.filter(item => item !== undefined);
+        
         setDepositData(filteredData);
+        
       } catch (error) {
+        
         console.error('Error fetching withdraw data:', error);
       }
     };
 
     const depositTimer = setInterval(async () => {
+      
       await fetchDepositData();
+      
       await fetchWithdrawData();
+      
       console.log('Data fetched');
     }, 10 * 1000);
 
-    // Cleanup
+    
     return () => clearInterval(depositTimer);
-  }, []);
+    
+  }, [Selecteditem]);
 
   return (
     <Paper>

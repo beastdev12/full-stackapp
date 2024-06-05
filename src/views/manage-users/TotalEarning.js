@@ -58,7 +58,8 @@ const TotalEarning = ({ data }) => {
 
     initializeData();
     const interval = setInterval(initializeData, 20 * 1000); // Fetch data every 20 seconds
-    return () => clearInterval(interval);
+    
+return () => clearInterval(interval);
   }, [data]);
 
   const getProductsByLocationId = (locationId) => {
@@ -79,6 +80,7 @@ const TotalEarning = ({ data }) => {
         const query ={
           data:`Update products set previoussaleprice=saleprice, saleprice=${valueInt} where product='${productsAtLocation[0].Product}' and locationid='${locationId}'`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
@@ -99,6 +101,7 @@ const TotalEarning = ({ data }) => {
         const query ={
           data:`Update products set stock=${valueInt} where product='${productsAtLocation[0].Product}' and locationid='${locationId}'`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
@@ -118,12 +121,14 @@ const TotalEarning = ({ data }) => {
     } else {
       const session = sessionStorage.getItem('userSession');
       const productName = item.substring(1,(item.length)-1)
+
       // Insert function logic here
       if (field === 'price') {
         // Call insert price function
         const query ={
           data:`Insert into products(product, saleprice, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CurDate(), (Select distinct(userid) from users where sessionid='${session}') )`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
@@ -143,6 +148,7 @@ const TotalEarning = ({ data }) => {
         const query ={
           data:`Insert into products(product, stock, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CurDate(), (Select distinct(userid) from users where sessionid='${session}') )`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',

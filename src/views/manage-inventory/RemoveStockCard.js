@@ -18,7 +18,7 @@ const sampleLocations = [];
 
 
 const RemoveStockCard = ({ isOpen, onClose }) => {
-  const connector = (request) => {
+  const Connector = (request) => {
     const [data, setData] = useState(null);
   
     useEffect(() => {
@@ -41,7 +41,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-    }, []);
+    }, [request]);
   
     return data
   };
@@ -58,12 +58,12 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
   let locations = [];
   let locationExists = false;
   
-  const dataCallForProducts = connector('Select product from products order by product');
+  const dataCallForProducts = Connector('Select product from products order by product');
   if (dataCallForProducts && dataCallForProducts.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     products = dataCallForProducts.map(item => item['product']);
   }
-  const dataCallForLocations = connector('Select locationid from location order by locationid');
+  const dataCallForLocations = Connector('Select locationid from location order by locationid');
   if (dataCallForLocations && dataCallForLocations.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     locations = dataCallForLocations.map(item => item['locationid']);
@@ -73,18 +73,21 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
     for ( var i=0; i< products.length; i++){
       if (productInputValue == products[i]){
         console.log(productInputValue);
-        return true
+        
+return true
       }
       else{
         return false
       }
     }
   }
+
   const handleLocationCheck = () => {
     for ( var i=0; i< locations.length; i++){
       if (locationInputValue == locations[i]){
         console.log(locationInputValue);
-        return true
+        
+return true
       }
       else{
         return false
@@ -121,6 +124,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
       suggestion =>
         suggestion.toLowerCase().indexOf(input.toLowerCase()) > -1
     );
+
     // Set suggestions
     setLocationSuggestions(filteredSuggestions.slice(0, 5).length > 0 ? filteredSuggestions.slice(0, 5): sampleLocations); // Show top 5 suggestions
   };
@@ -134,6 +138,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
     const input = event.target.value;
     setAmountInputValue(input);
   };
+
   const handleCostInputChange = (event) => {
     const input = event.target.value;
     setCostInputValue(input);
@@ -166,6 +171,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
           console.error('Error fetching data:', error);
         });
       }
+
       const updateQueryPOST= () => {
         const query = {
           // Define your query parameters here
@@ -191,7 +197,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
       removeQueryPOST();
       updateQueryPOST();
 
-      //connector(`insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where session='${session}'), ${locationInputValue}, 'ADD', ${amountInputValue}, '${productInputValue}')`);
+      //Connector(`insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where session='${session}'), ${locationInputValue}, 'ADD', ${amountInputValue}, '${productInputValue}')`);
       return onClose();
     }
     else if(productInputValue in products){

@@ -1,55 +1,19 @@
-// ** React Imports
-import { useState, useEffect, Fragment } from 'react';
+import { useState, Fragment } from 'react';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { styled } from '@mui/material/styles';
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'; // Ensure this path is correct
 
-// ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import { styled, useTheme } from '@mui/material/styles'
-import MuiCard from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel from '@mui/material/FormControlLabel'
-
-// ** Icons Imports
-import Poll from 'mdi-material-ui/Poll'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
-
-// ** Custom Components Imports
-import CardStatisticsHorizontalComponent from 'src/@core/components/card-statistics/cards-stats-horizontal'
-
-// ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-
-// ** Demo Components Imports
-import TableProducts from 'src/views/manage-inventory/TableProducts'
-import Downloader from 'src/views/manage-inventory/Downloader'
-import StatisticsCard from 'src/views/manage-inventory/StatisticsCard'
-import AddStockCard from 'src/views/manage-inventory/AddStockCard'
-import RemoveStockCard from 'src/views/manage-inventory/RemoveStockCard'
-
-
-
-const BlurBackground = styled('div')(({ theme, blur }) => ({
+const BlurBackground = styled('div')(({ blur }) => ({
   position: 'fixed',
   top: 0,
   left: 0,
   width: '100%',
   height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust opacity as needed
-  backdropFilter: `blur(${blur}px)`, // Apply blur effect
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  backdropFilter: `blur(${blur}px)`,
   zIndex: 1000,
   display: 'flex',
   alignItems: 'center',
@@ -58,68 +22,57 @@ const BlurBackground = styled('div')(({ theme, blur }) => ({
 
 const CenteredCard = styled(Card)({
   position: 'fixed',
-  zIndex: 2000, // Set a higher z-index value
+  zIndex: 2000,
 });
 
-const AddCard = ({ isOpen, onClose }) => {
-  return (
-    <BlurBackground blur={5}>
-      <CenteredCard sx={{marginLeft:50}}>
-        <CardContent>
-          <AddStockCard isOpen={isOpen} onClose={onClose}/>
-        </CardContent>
-      </CenteredCard>
-    </BlurBackground>
-  );
-};
-const RemoveCard = ({ isOpen, onClose }) => {
-  return (
-    <BlurBackground blur={5}>
-      <CenteredCard sx={{marginLeft:50}}>
-        <CardContent>
-          <RemoveStockCard isOpen={isOpen} onClose={onClose}/>
-        </CardContent>
-      </CenteredCard>
-    </BlurBackground>
-  );
-};
+const AddCard = ({ isOpen, onClose }) => (
+  <BlurBackground blur={5}>
+    <CenteredCard>
+      <CardContent>
+        {/* AddStockCard Component should be here */}
+        Add Stock Component
+      </CardContent>
+    </CenteredCard>
+  </BlurBackground>
+);
 
+const RemoveCard = ({ isOpen, onClose }) => (
+  <BlurBackground blur={5}>
+    <CenteredCard>
+      <CardContent>
+        {/* RemoveStockCard Component should be here */}
+        Remove Stock Component
+      </CardContent>
+    </CenteredCard>
+  </BlurBackground>
+);
 
 const Dashboard = () => {
   const [isAddStockOpen, setIsAddStockOpen] = useState(false);
   const [isRemoveStockOpen, setIsRemoveStockOpen] = useState(false);
 
-  const handleAddStockClick = () => {
-    setIsAddStockOpen(true);
-  };
-
-  const handleAddStockClose = () => {
-    setIsAddStockOpen(false);
-  };
-  const handleRemoveStockClick = () => {
-    setIsRemoveStockOpen(true);
-  };
-
-  const handleRemoveStockClose = () => {
-    setIsRemoveStockOpen(false);
-  };
+  const handleAddStockClick = () => setIsAddStockOpen(true);
+  const handleAddStockClose = () => setIsAddStockOpen(false);
+  const handleRemoveStockClick = () => setIsRemoveStockOpen(true);
+  const handleRemoveStockClose = () => setIsRemoveStockOpen(false);
 
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={8} lg={8}>
-          <StatisticsCard />
+          {/* StatisticsCard Component should be here */}
+          Statistics Card Component
         </Grid>
         <Grid item xs={12} md={4} lg={4}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={5}>
               <Button
-              fullWidth
-              size='large'
-              variant='contained'
-              color='success'
-              sx={{ marginBottom: 2}}
-              onClick={handleRemoveStockClick}
+                fullWidth
+                size='large'
+                variant='contained'
+                color='success'
+                sx={{ marginBottom: 2 }}
+                onClick={handleRemoveStockClick}
               >
                 Sale Stock
               </Button>
@@ -127,9 +80,9 @@ const Dashboard = () => {
             <Grid item xs={12} md={5}>
               <Button
                 fullWidth
-                size="large"
-                variant="contained"
-                color="info"
+                size='large'
+                variant='contained'
+                color='info'
                 sx={{ marginBottom: 2 }}
                 onClick={handleAddStockClick}
               >
@@ -138,40 +91,23 @@ const Dashboard = () => {
             </Grid>
           </Grid>
         </Grid>
-       
         {isAddStockOpen && (
-            <Fragment>
-                    <AddCard isOpen={isAddStockOpen} onClose={handleAddStockClose} />
-            </Fragment>
-            )}
+          <Fragment>
+            <AddCard isOpen={isAddStockOpen} onClose={handleAddStockClose} />
+          </Fragment>
+        )}
         {isRemoveStockOpen && (
-            <Fragment>
-                    <RemoveCard isOpen={isRemoveStockOpen} onClose={handleRemoveStockClose} />
-            </Fragment>
-            )}
-        
+          <Fragment>
+            <RemoveCard isOpen={isRemoveStockOpen} onClose={handleRemoveStockClose} />
+          </Fragment>
+        )}
         <Grid item xs={12} md={12} lg={12}>
-          <TableProducts />
+          {/* TableProducts Component should be here */}
+          Table Products Component
         </Grid>
       </Grid>
     </ApexChartWrapper>
-  )
-}
+  );
+};
 
-export default Dashboard
-
-/*
-<Grid item xs={12} md={2} lg={4}>
-          <TotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <SalesByCountries />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Trophy />
-        </Grid>
-
-
-
-
- */
+export default Dashboard;

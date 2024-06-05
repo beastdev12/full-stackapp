@@ -19,15 +19,22 @@ import MenuDown from 'mdi-material-ui/MenuDown'
 import DotsVertical from 'mdi-material-ui/DotsVertical'
 
 const TotalEarning = ({ data }) => {
-  //** States
+  
+  
   const [productData, setProductData] = useState([]);
+  
   const [locationData, setLocationData] = useState([]);
+  
   const [valuation, setValuation] = useState(0);
+  
   const [prevValuation, setPrevValuation] = useState(0);
+  
   const [editing, setEditing] = useState({ field: null, locationId: null });
+  
   const [inputValue, setInputValue] = useState('');
 
   const router = useRouter();
+  
   const { item } = router.query;
 
   useEffect(() => {
@@ -57,15 +64,19 @@ const TotalEarning = ({ data }) => {
     };
 
     initializeData();
-    const interval = setInterval(initializeData, 20 * 1000); // Fetch data every 20 seconds
+    
+    const interval = setInterval(initializeData, 20 * 1000);
+    
     return () => clearInterval(interval);
   }, [data]);
 
   const getProductsByLocationId = (locationId) => {
+    
     return productData.filter(product => product.locationid === locationId);
   };
 
   const handleEdit = (field, locationId, currentValue) => {
+    
     setEditing({ field, locationId });
     setInputValue(currentValue);
   };
@@ -73,12 +84,15 @@ const TotalEarning = ({ data }) => {
   const handleBlurOrEnter = (field, locationId, value, productsAtLocation) => {
     const valueInt = parseInt(value)
     if (productsAtLocation.length > 0) {
+
       // Update function logic here
       if (field === 'price') {
+
         // Call update Price function
         const query ={
           data:`Update products set previoussaleprice=saleprice, saleprice=${valueInt} where product='${productsAtLocation[0].Product}' and locationid='${locationId}'`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
@@ -95,10 +109,12 @@ const TotalEarning = ({ data }) => {
         });
         console.log(query.data)
       } else if (field === 'stock') {
+
         // Call update stock function
         const query ={
           data:`Update products set stock=${valueInt} where product='${productsAtLocation[0].Product}' and locationid='${locationId}'`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
@@ -118,12 +134,15 @@ const TotalEarning = ({ data }) => {
     } else {
       const session = sessionStorage.getItem('userSession');
       const productName = item.substring(1,(item.length)-1)
+
       // Insert function logic here
       if (field === 'price') {
+
         // Call insert price function
         const query ={
           data:`Insert into products(product, saleprice, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CurDate(), (Select distinct(userid) from users where sessionid='${session}') )`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
@@ -139,10 +158,12 @@ const TotalEarning = ({ data }) => {
           console.error('Error fetching data:', error);
         });
       } else if (field === 'stock') {
+
         // Call insert stock function
         const query ={
           data:`Insert into products(product, stock, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CurDate(), (Select distinct(userid) from users where sessionid='${session}') )`
         }
+
         // Make a POST request to your Express server endpoint
         fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',

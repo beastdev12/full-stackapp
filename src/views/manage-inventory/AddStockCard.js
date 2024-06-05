@@ -45,7 +45,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
       };
   
       // Make a POST request to your Express server endpoint
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -175,7 +175,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
         };
       
         
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -198,7 +198,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
         };
         
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

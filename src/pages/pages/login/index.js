@@ -115,7 +115,7 @@
 
         data:`update users set sessionid='${session}', lastlogin=CurDate() where userid = '${userid}'`,
       }
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/userSession?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/userSession?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

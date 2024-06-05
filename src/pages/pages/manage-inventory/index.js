@@ -34,13 +34,12 @@ import CardStatisticsHorizontalComponent from 'src/@core/components/card-statist
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
-import Table from 'src/views/manage-inventory/Table'
 import TableProducts from 'src/views/manage-inventory/TableProducts'
-import Trophy from 'src/views/manage-inventory/Trophy'
-import TotalEarning from 'src/views/manage-inventory/TotalEarning'
+import Downloader from 'src/views/manage-inventory/Downloader'
 import StatisticsCard from 'src/views/manage-inventory/StatisticsCard'
 import AddStockCard from 'src/views/manage-inventory/AddStockCard'
 import RemoveStockCard from 'src/views/manage-inventory/RemoveStockCard'
+
 
 
 const BlurBackground = styled('div')(({ theme, blur }) => ({
@@ -51,24 +50,34 @@ const BlurBackground = styled('div')(({ theme, blur }) => ({
   height: '100%',
   backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust opacity as needed
   backdropFilter: `blur(${blur}px)`, // Apply blur effect
-  zIndex: 9999,
+  zIndex: 1000,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
 }));
 
 const CenteredCard = styled(Card)({
-  position: 'relative',
+  position: 'fixed',
+  zIndex: 2000, // Set a higher z-index value
 });
 
 const AddCard = ({ isOpen, onClose }) => {
   return (
     <BlurBackground blur={5}>
-      <CenteredCard>
+      <CenteredCard sx={{marginLeft:50}}>
         <CardContent>
-          <CenteredCard>
           <AddStockCard isOpen={isOpen} onClose={onClose}/>
-          </CenteredCard>
+        </CardContent>
+      </CenteredCard>
+    </BlurBackground>
+  );
+};
+const RemoveCard = ({ isOpen, onClose }) => {
+  return (
+    <BlurBackground blur={5}>
+      <CenteredCard sx={{marginLeft:50}}>
+        <CardContent>
+          <RemoveStockCard isOpen={isOpen} onClose={onClose}/>
         </CardContent>
       </CenteredCard>
     </BlurBackground>
@@ -78,6 +87,7 @@ const AddCard = ({ isOpen, onClose }) => {
 
 const Dashboard = () => {
   const [isAddStockOpen, setIsAddStockOpen] = useState(false);
+  const [isRemoveStockOpen, setIsRemoveStockOpen] = useState(false);
 
   const handleAddStockClick = () => {
     setIsAddStockOpen(true);
@@ -85,6 +95,13 @@ const Dashboard = () => {
 
   const handleAddStockClose = () => {
     setIsAddStockOpen(false);
+  };
+  const handleRemoveStockClick = () => {
+    setIsRemoveStockOpen(true);
+  };
+
+  const handleRemoveStockClose = () => {
+    setIsRemoveStockOpen(false);
   };
 
   return (
@@ -95,28 +112,28 @@ const Dashboard = () => {
         </Grid>
         <Grid item xs={12} md={4} lg={4}>
           <Grid container spacing={2}>
-          <Grid item xs={12} md={5}>
-            <Button
-              fullWidth
-              size="large"
-              variant="contained"
-              color="success"
-              sx={{ marginBottom: 2 }}
-              onClick={handleAddStockClick}
-            >
-              Add Stock
-            </Button>
-          </Grid>
             <Grid item xs={12} md={5}>
               <Button
               fullWidth
               size='large'
               variant='contained'
-              color='error'
+              color='success'
               sx={{ marginBottom: 2}}
-              onClick={() => {}}
+              onClick={handleRemoveStockClick}
               >
-                Remove Stock
+                Sale Stock
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <Button
+                fullWidth
+                size="large"
+                variant="contained"
+                color="info"
+                sx={{ marginBottom: 2 }}
+                onClick={handleAddStockClick}
+              >
+                Purchase Stock
               </Button>
             </Grid>
           </Grid>
@@ -127,12 +144,14 @@ const Dashboard = () => {
                     <AddCard isOpen={isAddStockOpen} onClose={handleAddStockClose} />
             </Fragment>
             )}
+        {isRemoveStockOpen && (
+            <Fragment>
+                    <RemoveCard isOpen={isRemoveStockOpen} onClose={handleRemoveStockClose} />
+            </Fragment>
+            )}
         
-        <Grid item xs={34} md={12} lg={12}>
+        <Grid item xs={12} md={12} lg={12}>
           <TableProducts />
-        </Grid>
-        <Grid item xs={12} md={2} lg={4}>
-          <TotalEarning />
         </Grid>
       </Grid>
     </ApexChartWrapper>

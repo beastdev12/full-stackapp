@@ -26,6 +26,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import { Icon } from '@mui/material'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -54,7 +55,7 @@ const App = props => {
       // Your authentication logic here
       // If user is not authenticated, redirect to login page
       if (!isAuthenticated) {
-        router.push('/');
+        router.push('/pages/login');
       }
     };
 
@@ -62,7 +63,7 @@ const App = props => {
   }, []);
 
   // Variables
-  const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
+  const getLayout = Component.getLayout ?? (page => <UserLayout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>{page}</UserLayout>)
 
   return (
     <CacheProvider value={emotionCache}>
@@ -79,7 +80,7 @@ const App = props => {
       <SettingsProvider>
         <SettingsConsumer>
           {({ settings }) => {
-            return <ThemeComponent settings={settings}>{getLayout(<Component isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} {...pageProps} />)}</ThemeComponent>
+            return <ThemeComponent settings={settings} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>{getLayout(<Component isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} {...pageProps} />)}</ThemeComponent>
           }}
         </SettingsConsumer>
       </SettingsProvider>

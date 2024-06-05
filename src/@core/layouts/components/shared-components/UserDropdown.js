@@ -3,6 +3,7 @@ import { useState, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
+import config  from 'config.js';
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -22,6 +23,7 @@ import LogoutVariant from 'mdi-material-ui/LogoutVariant'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import MessageOutline from 'mdi-material-ui/MessageOutline'
 import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
+import { typeOf } from 'tls';
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -32,35 +34,8 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
   boxShadow: `0 0 0 2px ${theme.palette.background.paper}`
 }))
 
-const connector = (request) => {
-  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    const query = {
-      // Define your query parameters here
-      data: request,
-    };
-
-    // Make a POST request to your Express server endpoint
-    fetch(`http://192.168.1.109:3001/api/data?${new URLSearchParams(query)}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-      setData(data);
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
-  }, []);
-
-  return data
-};
-
-const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
+const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
 
   const styles = {
     py: 2,
@@ -81,9 +56,18 @@ const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
     const [username, setUsername] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null)
+    const [userSession, setUserSession] = useState(null);
 
     // ** Hooks
-  
+    useEffect(() => {
+      const session = sessionStorage.getItem('userSession');
+      setUserSession(session);
+1        
+      if (isAuthenticated && session) {
+        
+      }
+    }, [isAuthenticated]);
+    
     const handleDropdownOpen = event => {
       setAnchorEl(event.currentTarget)
       const fetchData = async () => {
@@ -92,7 +76,7 @@ const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
             data: `select username,role,userid,lastlogin, lastupdate from users where sessionid = '${userSession}'`,
           };
 
-          const response = await fetch(`http://192.168.1.109:3001/api/userSession?${new URLSearchParams(query)}`, {
+          const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/userSession?${new URLSearchParams(query)}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -105,15 +89,13 @@ const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
             setUsername(data[0].username);
             setUserRole(data[0].role);
           } else {
-            console.log('No user data found for the session', data);
+            console.log('No user data found for the session', data, query.data);
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
       };
       fetchData();
-      
-    
     }
   
     const handleDropdownClose = url => {
@@ -123,16 +105,10 @@ const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
       setAnchorEl(null)
     }
 
-    
-  const [userSession, setUserSession] = useState(null);
-  useEffect(() => {
-    const session = sessionStorage.getItem('userSession');
-    setUserSession(session);
-1      
-    if (isAuthenticated && session) {
-      
+    const handleLogout = () =>{
+      setIsAuthenticated(false);
     }
-  }, [isAuthenticated]);
+  
 
   return (
     <Fragment>
@@ -147,7 +123,7 @@ const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
           alt='John Doe'
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src='/images/avatars/5.png'
         />
       </Badge>
       <Menu
@@ -214,7 +190,7 @@ const UserDropdown = ({ isAuthenticated, setIsAuthenticated }) => {
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem sx={{ py: 2 }} onClick={() => handleDropdownClose('/pages/login')}>
+        <MenuItem sx={{ py: 2 }} onClick={()=>{}}>
           <LogoutVariant sx={{ marginRight: 2, fontSize: '1.375rem', color: 'text.secondary' }} />
           Logout
         </MenuItem>

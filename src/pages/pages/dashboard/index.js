@@ -1,6 +1,6 @@
 // ** Router imports 
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
@@ -18,21 +18,14 @@ import CardStatisticsVerticalComponent from 'src/@core/components/card-statistic
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
-import Table from 'src/views/dashboard/Table'
-import TableProducts from 'src/views/dashboard/TableProducts'
-import Trophy from 'src/views/dashboard/Trophy'
-import TotalEarning from 'src/views/dashboard/TotalEarning'
+import TableProduct from 'src/views/dashboard/TableProduct'
 import StatisticsCard from 'src/views/dashboard/StatisticsCard'
-import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
-import SalesByCountries from 'src/views/dashboard/SalesByCountries'
-import { CosineWave } from 'mdi-material-ui'
-
 
 var profit = 45;
 
 const Dashboard = () => {
-  const router = useRouter();
+  
   const [userSession, setUserSession] = useState(null);
 
   useEffect(() => {
@@ -45,18 +38,6 @@ const Dashboard = () => {
     return (
       <ApexChartWrapper>
         <Grid container spacing={6}>
-          <Grid item xs={14} md={12}>
-            <StatisticsCard />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <WeeklyOverview />
-          </Grid>
-          <Grid item xs={12} md={12} lg={8}>
-            <DepositWithdraw />
-          </Grid>
-          <Grid item xs={12}>
-            <TableProducts />
-          </Grid>
         </Grid>
       </ApexChartWrapper>
     );
@@ -64,17 +45,14 @@ const Dashboard = () => {
     return (
       <ApexChartWrapper>
         <Grid container spacing={6}>
-          <Grid item xs={14} md={12}>
+          <Grid item xs={12} md={2.2}>
             <StatisticsCard />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <WeeklyOverview />
-          </Grid>
-          <Grid item xs={12} md={12} lg={8}>
+          <Grid item xs={12} md={12} lg={9.8}>
             <DepositWithdraw />
           </Grid>
           <Grid item xs={12}>
-            <TableProducts />
+            <TableProduct />
           </Grid>
         </Grid>
       </ApexChartWrapper>

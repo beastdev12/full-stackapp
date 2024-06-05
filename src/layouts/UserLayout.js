@@ -16,7 +16,7 @@ import VerticalAppBarContent from './components/vertical/AppBarContent'
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
 
-const UserLayout = ({ children }) => {
+const UserLayout = ({ children, isAuthenticated}) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings()
 
@@ -33,15 +33,15 @@ const UserLayout = ({ children }) => {
   
 
   return (
-    <VerticalLayout
+    <VerticalLayout isAuthenticated={isAuthenticated}
       hidden={hidden}
       settings={settings}
       saveSettings={saveSettings}
-      verticalNavItems={VerticalNavItems()} // Navigation Items
+      verticalNavItems={VerticalNavItems( isAuthenticated={isAuthenticated})} // Navigation Items
       verticalAppBarContent={(
         props // AppBar Content
       ) => (
-        <VerticalAppBarContent
+        <VerticalAppBarContent isAuthenticated={isAuthenticated}
           hidden={hidden}
           settings={settings}
           saveSettings={saveSettings}

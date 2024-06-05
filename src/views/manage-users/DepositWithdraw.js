@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@emotion/react';
-import config  from 'config.js';
+import { useRouter } from 'next/router';
+import config from 'config.js';
 
 
 import Box from '@mui/material/Box';
@@ -16,9 +17,9 @@ import { styled, theme } from '@mui/material/styles';
 const statusObj = {
   admin: { color: 'primary' },
   developer: { color: 'info' },
-  professional: { color: 'success' },
   resigned: { color: 'warning' },
-  rejected: { color: 'error' }
+  rejected: { color: 'error' },
+  professional: { color: 'success' }
 }
 
 // Styled Divider component
@@ -43,9 +44,11 @@ const DividerHorizontal = styled(MuiDivider)(({ theme }) => ({
 }));
 
 const DepositWithdraw = () => {
-  
+  const theme = useTheme();
+  const router = useRouter();
+  const Selecteditem = router.query.item;
+  console.log(Selecteditem);
 
-  theme= useTheme();
   const [depositData, setDepositData] = useState([]);
   const [withdrawData, setWithdrawData] = useState([]);
 
@@ -68,22 +71,25 @@ const DepositWithdraw = () => {
   useEffect(() => {
     const fetchDepositData = async () => {
       try {
-        const data = await fetchData("SELECT * from updatelog where type = 'ADD' order by date desc");
+        const data = await fetchData("SELECT * FROM updatelog WHERE type = 'ADD' order by date desc, time desc");
         const processedData = await Promise.all(data.map(async (item) => {
-          const productData = await fetchData(`SELECT product FROM products WHERE product = '${item.product}'`);
-          const UserData = await fetchData(`SELECT username, LOWER(role) AS role FROM users WHERE ${item.userid ? `userid = '${item.userid}'` : 'userid IS NULL'}`);
-          const LocationData = await fetchData(`SELECT * FROM location WHERE ${item.locationid ? `locationid = '${item.locationid}'` : 'locationid IS NULL'}`);
-          return {
-            name: productData[0]?.product || 'Sample',
-            amount: item.amount,
-            user: UserData[0]?.username || 'default',
-            role: UserData[0]?.role || 'default',
-            location: LocationData[0]?.address || 'No address'
-          };
+          if(item.product === Selecteditem){
+            const productData = await fetchData(`SELECT product FROM products WHERE product = '${item.product}'`);
+            const UserData = await fetchData(`SELECT username, LOWER(role) AS role FROM users WHERE ${item.userid ? `userid = '${item.userid}'` : 'userid IS NULL'}`);
+            const LocationData = await fetchData(`SELECT * FROM location WHERE ${item.locationid ? `locationid = '${item.locationid}'` : 'locationid IS NULL'}`);
+            return {
+              name: productData[0]?.product || 'Sample',
+              amount: item?.amount || 0,
+              user: UserData[0]?.username || 'default',
+              role: UserData[0]?.role || 'default',
+              location: LocationData[0]?.address || 'No address'
+            };
+          }
         }));
-        setDepositData(processedData);
+        const filteredData = processedData.filter(item => item !== undefined);
+        setWithdrawData(filteredData);
       } catch (error) {
-        console.error('Error fetching deposit data:', error);
+        console.error('Error fetching withdraw data:', error);
       }
     };
 
@@ -91,18 +97,21 @@ const DepositWithdraw = () => {
       try {
         const data = await fetchData("SELECT * FROM updatelog WHERE type = 'REMOVE' order by date desc, time desc");
         const processedData = await Promise.all(data.map(async (item) => {
-          const productData = await fetchData(`SELECT product FROM products WHERE product = '${item.product}'`);
-          const UserData = await fetchData(`SELECT username, LOWER(role) AS role FROM users WHERE ${item.userid ? `userid = '${item.userid}'` : 'userid IS NULL'}`);
-          const LocationData = await fetchData(`SELECT * FROM location WHERE ${item.locationid ? `locationid = '${item.locationid}'` : 'locationid IS NULL'}`);
-          return {
-            name: productData[0]?.product || 'Sample',
-            amount: item.amount,
-            user: UserData[0]?.username || 'default',
-            role: UserData[0]?.role || 'default',
-            location: LocationData[0]?.address || 'No address'
-          };
+          if(item.product === Selecteditem){
+            const productData = await fetchData(`SELECT product FROM products WHERE product = '${item.product}'`);
+            const UserData = await fetchData(`SELECT username, LOWER(role) AS role FROM users WHERE ${item.userid ? `userid = '${item.userid}'` : 'userid IS NULL'}`);
+            const LocationData = await fetchData(`SELECT * FROM location WHERE ${item.locationid ? `locationid = '${item.locationid}'` : 'locationid IS NULL'}`);
+            return {
+              name: productData[0]?.product || 'Sample',
+              amount: item?.amount || 0,
+              user: UserData[0]?.username || 'default',
+              role: UserData[0]?.role || 'default',
+              location: LocationData[0]?.address || 'No address'
+            };
+          }
         }));
-        setWithdrawData(processedData);
+        const filteredData = processedData.filter(item => item !== undefined);
+        setDepositData(filteredData);
       } catch (error) {
         console.error('Error fetching withdraw data:', error);
       }

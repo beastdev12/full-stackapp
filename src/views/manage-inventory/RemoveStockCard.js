@@ -1,195 +1,277 @@
-import { useState, useEffect } from 'react';
-const mysql = require('mysql');
+import React, { useState, useEffect } from 'react';
+import config from 'config.js';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import Avatar from '@mui/material/Avatar'
-import CardHeader from '@mui/material/CardHeader'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box';
+import Input from '@mui/material/Input';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import CardContent from '@mui/material/CardContent';
+import FormHelperText from '@mui/material/FormHelperText';
+import { ImageMultipleOutline } from 'mdi-material-ui';
 
-// ** Icons Imports
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import ChevronUp from 'mdi-material-ui/ChevronUp'
-import ChevronDown from 'mdi-material-ui/ChevronDown'
-import { CurrencyInr } from 'mdi-material-ui'
+const sampleLocations = [];
 
 
 
-const connector = (request) => {
-  const [data, setData] = useState(null);
+const RemoveStockCard = ({ isOpen, onClose }) => {
+  const connector = (request) => {
+    const [data, setData] = useState(null);
+  
+    useEffect(() => {
+      const query = {
+        // Define your query parameters here
+        data: request,
+      };
+  
+      // Make a POST request to your Express server endpoint
+      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        setData(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+    }, []);
+  
+    return data
+  };
+  
+  const [productAdd, setProductAdd] = useState('');
+  const [productSuggestions, setProductSuggestions] = useState([]);
+  const [productInputValue, setProductInputValue] = useState('');
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [locationInputValue, setLocationInputValue] = useState('');
+  const [amountInputValue, setAmountInputValue] = useState('');
+  const [costInputValue, setCostInputValue] = useState('');
+  
+  let products = [];
+  let locations = [];
+  let locationExists = false;
+  
+  const dataCallForProducts = connector('Select product from products order by product');
+  if (dataCallForProducts && dataCallForProducts.length > 0) {
+    // Access the value of "COUNT(product)" property of the first object in the array
+    products = dataCallForProducts.map(item => item['product']);
+  }
+  const dataCallForLocations = connector('Select locationid from location order by locationid');
+  if (dataCallForLocations && dataCallForLocations.length > 0) {
+    // Access the value of "COUNT(product)" property of the first object in the array
+    locations = dataCallForLocations.map(item => item['locationid']);
+  }
 
-  useEffect(() => {
-    const query = {
-      // Define your query parameters here
-      data: request,
-    };
+  const handleProductCheck = () => {
+    for ( var i=0; i< products.length; i++){
+      if (productInputValue == products[i]){
+        console.log(productInputValue);
+        return true
+      }
+      else{
+        return false
+      }
+    }
+  }
+  const handleLocationCheck = () => {
+    for ( var i=0; i< locations.length; i++){
+      if (locationInputValue == locations[i]){
+        console.log(locationInputValue);
+        return true
+      }
+      else{
+        return false
+      }
+    }
+  }
+  
+  const handleProductInputChange = (event) => {
+    const input = event.target.value;
+    setProductInputValue(input);
 
-    // Make a POST request to your Express server endpoint
-    fetch(`http://192.168.1.109:3001/api/data?${new URLSearchParams(query)}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-      setData(data);
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
-  }, []);
+    // Filter suggestions based on input
+    const filteredSuggestions = products.filter(
+      suggestion =>
+        suggestion.toLowerCase().indexOf(input.toLowerCase()) > -1
+    );
 
-  return data
+    // Set suggestions
+    setProductSuggestions(filteredSuggestions.slice(0, 5)); // Show top 5 suggestions
+  };
+
+  const handleProductSuggestionClick = (suggestion) => {
+    setProductInputValue(suggestion);
+    setProductSuggestions([]);
+  };
+
+
+  const handleLocationInputChange = (event) => {
+    const input = event.target.value;
+    setLocationInputValue(input);
+
+    // Filter suggestions based on input
+    const filteredSuggestions = locations.filter(
+      suggestion =>
+        suggestion.toLowerCase().indexOf(input.toLowerCase()) > -1
+    );
+    // Set suggestions
+    setLocationSuggestions(filteredSuggestions.slice(0, 5).length > 0 ? filteredSuggestions.slice(0, 5): sampleLocations); // Show top 5 suggestions
+  };
+
+  const handleLocationSuggestionClick = (suggestion) => {
+    setLocationInputValue(suggestion);
+    setLocationSuggestions([]);
+  };
+
+  const handleAmountInputChange = (event) => {
+    const input = event.target.value;
+    setAmountInputValue(input);
+  };
+  const handleCostInputChange = (event) => {
+    const input = event.target.value;
+    setCostInputValue(input);
+  };
+
+  const handleOnAdd = () => {
+    
+    const session = sessionStorage.getItem('userSession')
+    if (handleProductCheck() && amountInputValue && handleLocationCheck()) {
+      console.log('entry Removed')
+      
+      const removeQueryPOST= () => {
+        const query = {
+          // Define your query parameters here
+          data: `Update products set stock=stock-${amountInputValue}, updatedDate=curDate(), updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
+        };
+      
+        // Make a POST request to your Express server endpoint
+        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+      }
+      const updateQueryPOST= () => {
+        const query = {
+          // Define your query parameters here
+          data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where sessionid='${session}'), '${locationInputValue}', 'REMOVE', ${amountInputValue}, '${productInputValue}')`,
+        };
+        
+        // Make a POST request to your Express server endpoint
+        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.error);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+      }
+  
+      removeQueryPOST();
+      updateQueryPOST();
+
+      //connector(`insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where session='${session}'), ${locationInputValue}, 'ADD', ${amountInputValue}, '${productInputValue}')`);
+      return onClose();
+    }
+    else if(productInputValue in products){
+      console.log('yes')
+    }
+    else{
+      return onClose(); 
+    }
+  }
+
+
+  return (
+      <CardContent sx={{maxWidth:400}}>
+        <form noValidate autoComplete='on' onSubmit={e => e.preventDefault()}>
+          <Box id='filterSelect'>
+            <TextField
+              label="Product"
+              fullWidth
+              value={productInputValue}
+              onChange={handleProductInputChange}
+            />
+            <Box>
+              {productSuggestions.map((suggestion, index) => (
+                <Button
+                  key={index}
+                  variant="outlined"
+                  onClick={() => handleProductSuggestionClick(suggestion)}
+                >
+                  {suggestion}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+          <Stack direction={"row"} spacing={2} sx={{marginTop:5}}>
+          <FormControl >
+                <InputLabel htmlFor="amount"  id='amount'>Quntity</InputLabel>
+                <Input name="amount" id="amount" type="number" aria-describedby="helper-amount" value={amountInputValue} onChange={handleAmountInputChange}/>
+                <FormHelperText id="helper-amount">Enter Product Quantity Sold</FormHelperText>
+          </FormControl>
+          </Stack>
+        <Box id='filterSelect' marginTop={3}>
+            <TextField
+              label="Location"
+              fullWidth
+              value={locationInputValue}
+              onChange={handleLocationInputChange}
+            />
+            <Box>
+              {locationSuggestions.map((suggestion, index) => (
+                <Button
+                  key={index}
+                  variant="outlined"
+                  onClick={() => handleLocationSuggestionClick(suggestion)}
+                >
+                  {suggestion}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+          <Button
+            variant="outlined"
+            color="info"
+            sx={{ margin: 2
+              
+            }}
+            onClick={handleOnAdd}
+          >
+            Confirm
+          </Button>
+          <Button
+            variant="outlined"
+            color="warning"
+            sx={{ margin: 3 }}
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+        </form>
+      </CardContent>
+  );
 };
 
-
-
-const renderStats = () => {
-  return salesData.map((item, index) => (
-    <Grid item xs={6} sm={2} key={index}>
-      <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar
-          variant='rounded'
-          sx={{
-            mr: 3,
-            width: 44,
-            height: 44,
-            boxShadow: 3,
-            color: 'common.white',
-            backgroundColor: `${item.color}.main`
-          }}
-        >
-          {item.icon}
-        </Avatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant='caption'>{item.title}</Typography>
-          <Typography variant='h6'>{item.stats}</Typography>
-        </Box>
-      </Box>
-    </Grid>
-  ))
-}
-
-const StatisticsCard = () => {
-  var totalStock = 0;
-  var Average30 = 0;
-  var data = null;
-  data = connector('Select Sum(stock) from products where product is not NULL');
-  if (data && data.length > 0) {
-    // Access the value of "COUNT(product)" property of the first object in the array
-    const count = data[0]["Sum(stock)"];
-    totalStock = count-1;
-  }
-  data = connector("Select SUM(stock*costprice) as valuation from products WHERE Price_30_Days != NULL OR Price_30_Days != '' OR Price_30_Days != '' ");
-  if (data && data.length > 0) {
-    // Access the value of "COUNT(product)" property of the first object in the array
-    const count = data[0]['valuation'];
-    Average30 = count.toFixed(2);
-  }
-
-
-  const salesData = [
-    {
-      stats: totalStock,
-      title: 'Total Stock',
-      color: 'primary',
-      icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
-    },
-    {
-      stats: "₹"+Average30,
-      title: 'Valuation',
-      color: 'success',
-      icon: <CurrencyInr sx={{ fontSize: '1.75rem' }} />,
-    }
-  ]
-  //console.log(test);
-  return (
-    <Card>
-      <CardHeader
-        title='Inventory'
-        action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.primary' }}>
-          </IconButton>
-        }
-        subheader={
-          <Typography variant='body2'>
-          </Typography>
-        }
-        titleTypographyProps={{
-          sx: {
-            mb: 2.5,
-            lineHeight: '2rem !important',
-            letterSpacing: '0.15px !important'
-          }
-        }}
-      />
-      <CardContent sx={{ pt: theme => `${theme.spacing(0)}  !important` }}>
-        <Grid container spacing={[3, 0]}>
-          {salesData.map((item, index) => (
-            <Grid item xs={12} sm={6} key={index}>
-              <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar
-                  variant='rounded'
-                  sx={{
-                    mr: 3,
-                    width: 44,
-                    height: 44,
-                    boxShadow: 3,
-                    color: 'common.white',
-                    backgroundColor: `${item.color}.main`
-                  }}
-                >
-                  {item.icon}
-                </Avatar>
-                <Box sx={{ display: 'grid', gridTemplateRows: 'auto auto', gridTemplateColumns: '1fr auto', alignItems: 'center' }}>
-                  {/* First row */}
-                  <Typography variant='caption' sx={{ gridColumn: '1 /span 2', gridRow: '1' }}>{item.title}</Typography>
-                
-                  {/* Second row */}
-                  <Typography variant='h6' >{item.stats}</Typography>
-                
-                  {/* Second column */}
-                  <Box sx={{display: 'flex', alignItems: 'centre' }}>
-                    {item.trend && (
-                      <>
-                        {item.trend === 'positive' ? (
-                          <ChevronUp sx={{ color: 'error.main', fontWeight: 600 }} />
-                        ) : item.trend === 'negative' ? (
-                          <ChevronDown sx={{ color: 'success.main', fontWeight: 600 }} />
-                        ) : null}
-                        <Typography
-                          variant='caption'
-                          sx={{
-                            fontWeight: 600,
-                            lineHeight: 2,
-                            color: item.trend === 'positive' ? 'error.main' : 'success.main'
-                          }}
-                        >{item.trendNumber}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </CardContent>
-    </Card>
-  )
-}
-
-export default StatisticsCard
-
-/*
-<DotsVertical />
-*/
+export default RemoveStockCard;

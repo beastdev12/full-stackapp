@@ -135,7 +135,7 @@
       let query = {
         data: request,
       };
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/auth?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/auth?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

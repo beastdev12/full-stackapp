@@ -17,11 +17,11 @@ const sampleLocations = [];
 const currencies = [
   {
     value: 'USD',
-    label: '$',
+    label: 'KG',
   },
   {
     value: 'EUR',
-    label: '€',
+    label: 'Unit',
   },
   {
     value: 'BTC',
@@ -40,12 +40,13 @@ const AddStockCard = ({ isOpen, onClose }) => {
   
     useEffect(() => {
       const query = {
+
         // Define your query parameters here
         data: request,
       };
   
       // Make a POST request to your Express server endpoint
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -89,14 +90,12 @@ const AddStockCard = ({ isOpen, onClose }) => {
   const handleProductCheck = () => {
     for ( var i=0; i< products.length; i++){
       if (productInputValue == products[i]){
-          
-      return true
-      }
-      else{
-
-        return false
+        
+        return true
       }
     }
+
+    return false
   }
 
   const handleLocationCheck = () => {
@@ -105,11 +104,9 @@ const AddStockCard = ({ isOpen, onClose }) => {
         
         return true
       }
-      else{
-
-        return false
-      }
     }
+
+    return false
   }
   
   const handleProductInputChange = (event) => {
@@ -147,19 +144,28 @@ const AddStockCard = ({ isOpen, onClose }) => {
     setLocationSuggestions(filteredSuggestions.slice(0, 5).length > 0 ? filteredSuggestions.slice(0, 5): sampleLocations); // Show top 5 suggestions
   };
 
-  const handleLocationSuggestionClick = (suggestion) => {//
-    setLocationInputValue(suggestion);//
-    setLocationSuggestions([]);//
+  const handleLocationSuggestionClick = (suggestion) => {
+
+    setLocationInputValue(suggestion);
+
+    setLocationSuggestions([]);
+
   };
 
-  const handleAmountInputChange = (event) => {//
-    const input = event.target.value;//
-    setAmountInputValue(input);//
+  const handleAmountInputChange = (event) => {
+
+    const input = event.target.value;
+
+    setAmountInputValue(input);
+
   };
 
-  const handleCostInputChange = (event) => {//
-    const input = event.target.value;//
-    setCostInputValue(input);//
+  const handleCostInputChange = (event) => {
+
+    const input = event.target.value;
+
+    setCostInputValue(input);
+
   };
 
   const handleOnAdd = () => {
@@ -171,11 +177,11 @@ const AddStockCard = ({ isOpen, onClose }) => {
       const addQueryPOST= () => {
         const query = {
           
-          data: `Update products set stock=${amountInputValue}+stock, updatedDate=curDate(), updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
+          data: `Update products set stock=${amountInputValue}+CAST(stock as numeric), updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
         };
       
         
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -194,11 +200,11 @@ const AddStockCard = ({ isOpen, onClose }) => {
       const updateQueryPOST= () => {
         const query = {
           
-          data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where sessionid='${session}'), '${locationInputValue}', 'ADD', ${amountInputValue}, '${productInputValue}')`,
+          data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(CURRENT_DATE, CURRENT_TIMESTAMP, (select distinct(userid) from users where sessionid='${session}'), '${locationInputValue}', 'ADD', ${amountInputValue}, '${productInputValue}')`,
         };
         
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -258,7 +264,9 @@ const AddStockCard = ({ isOpen, onClose }) => {
                 <FormHelperText id="helper-amount">Enter Product Quantity Purchased</FormHelperText>
                 
           </FormControl>
-          {/**  TO BE USE LATER ****
+          {
+
+          /**  TO BE USE LATER ****
           <TextField
           id="filled-select-currency-native"
           select
@@ -277,6 +285,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
           ))}
         </TextField>
            */
+          
            }
           </Stack>
         <Box id='filterSelect' marginTop={3}>

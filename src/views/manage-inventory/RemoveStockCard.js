@@ -11,7 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import CardContent from '@mui/material/CardContent';
 import FormHelperText from '@mui/material/FormHelperText';
-import { ImageMultipleOutline } from 'mdi-material-ui';
+import { FastForward, ImageMultipleOutline } from 'mdi-material-ui';
 
 const sampleLocations = [];
 
@@ -61,12 +61,12 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
   const dataCallForProducts = Connector('Select product from products order by product');
   if (dataCallForProducts && dataCallForProducts.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
-    products = dataCallForProducts.map(item => item['product']);
+    products = dataCallForProducts.map(item => item.product);
   }
   const dataCallForLocations = Connector('Select locationid from location order by locationid');
   if (dataCallForLocations && dataCallForLocations.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
-    locations = dataCallForLocations.map(item => item['locationid']);
+    locations = dataCallForLocations.map(item => item.locationid);
   }
 
   const handleProductCheck = () => {
@@ -74,25 +74,22 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
       if (productInputValue == products[i]){
         console.log(productInputValue);
         
-return true
-      }
-      else{
-        return false
+      return true
       }
     }
+    
+    return false
   }
 
   const handleLocationCheck = () => {
     for ( var i=0; i< locations.length; i++){
       if (locationInputValue == locations[i]){
-        console.log(locationInputValue);
         
-return true
-      }
-      else{
-        return false
+        return true
       }
     }
+
+    return false
   }
   
   const handleProductInputChange = (event) => {
@@ -147,17 +144,18 @@ return true
   const handleOnAdd = () => {
     
     const session = sessionStorage.getItem('userSession')
+    console.log(handleProductCheck(), amountInputValue , handleLocationCheck())
     if (handleProductCheck() && amountInputValue && handleLocationCheck()) {
       console.log('entry Removed')
       
       const removeQueryPOST= () => {
         const query = {
           // Define your query parameters here
-          data: `Update products set stock=stock-${amountInputValue}, updatedDate=curDate(), updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
+          data: `Update products set stock=CAST(stock as NUMERIC)-${amountInputValue}, updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
         };
       
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -175,11 +173,11 @@ return true
       const updateQueryPOST= () => {
         const query = {
           // Define your query parameters here
-          data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where sessionid='${session}'), '${locationInputValue}', 'REMOVE', ${amountInputValue}, '${productInputValue}')`,
+          data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(CURRENT_DATE, CURRENT_TIMESTAMP, (select distinct(userid) from users where sessionid='${session}'), '${locationInputValue}', 'REMOVE', ${amountInputValue}, '${productInputValue}')`,
         };
         
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

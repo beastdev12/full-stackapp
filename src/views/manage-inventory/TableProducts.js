@@ -1,12 +1,11 @@
 // ** React Imports
-import { useState, useEffect, useRef} from 'react';
+import { useState, useEffect} from 'react';
 import { useRouter } from 'next/router'
 import { styled, useTheme } from '@mui/material/styles';
 import config  from 'config.js';
 
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
@@ -26,7 +25,7 @@ const fetchData = async (request) => {
   try {
     const query = { data: request };
 
-    const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+    const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -85,9 +84,9 @@ return acc;
         }, {});
 
         const updatedRows = productsData.reduce((acc, product) => {
-          let existingProduct = acc.find(item => item.name === product.Product);
+          let existingProduct = acc.find(item => item.name === product.product);
           if (!existingProduct) {
-            existingProduct = { name: product.Product };
+            existingProduct = { name: product.product };
             acc.push(existingProduct);
           }
 
@@ -111,12 +110,15 @@ return acc;
           let stocksum = 0;
           productsData.forEach(element => {
             if(element.locationid==location.locationid){
-              pricesum += element.saleprice;
-              stocksum += element.stock;
+              if (element.saleprice != null){
+                 let  temp = parseFloat(element.saleprice) * parseFloat(element.stock);
+                 pricesum += temp
+              }
+              stocksum += parseFloat(element.stock);
             }
           });
           
-return {
+          return {
             locationAddress: location.address,
             locationStock: stocksum,
             locationPrice: pricesum
@@ -188,7 +190,7 @@ return acc;
                   <Grid item >
                     <Grid container>
                       <Grid item >
-                        <Typography variant="body2" sx={{fontWeight:600}}>{'Price'.toLocaleUpperCase()}:</Typography>
+                        <Typography variant="body2" sx={{fontWeight:600}}>{'Valuation'.toLocaleUpperCase()}:₹</Typography>
                       </Grid>
                       <Grid item >
                         <Typography variant="body2">{location.locationPrice}</Typography>
@@ -245,7 +247,7 @@ return acc;
                   if (column.label=="Price"){
                     const value = row[column.id];
                   
-return (
+                  return (
                     <DividerTableCell
                     onClick={() => handlePriceClick(row, column.id)}
                      key={column.id} align={column.align}>
@@ -256,7 +258,7 @@ return (
                   else {
                     const value = row[column.id];
                     
-return (
+                    return (
                       <DividerTableCell
                       onClick={() => handleonItemClick(row.name)}
                        key={column.id} align={column.align}>

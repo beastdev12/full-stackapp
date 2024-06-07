@@ -22,7 +22,7 @@ const StatisticsCard = () => {
     };
   
     try {
-      const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

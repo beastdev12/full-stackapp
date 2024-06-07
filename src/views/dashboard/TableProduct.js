@@ -22,7 +22,7 @@ const fetchData = async (request) => {
     const query = { 
       data: request };
 
-    const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+    const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
       
       method: 'POST',
       headers: {
@@ -114,9 +114,9 @@ return acc;
         }, {});
 
         const updatedRows = productsData.reduce((acc, product) => {
-          let existingProduct = acc.find(item => item.name === product.Product);
+          let existingProduct = acc.find(item => item.name === product.product);
           if (!existingProduct) {
-            existingProduct = { name: product.Product };
+            existingProduct = { name: product.product };
             acc.push(existingProduct);
           }
 
@@ -231,7 +231,7 @@ return acc;
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, rowIndex) => (
-              <TableRow action={handleonItemClick} hover role='checkbox' tabIndex={-1} key={rowIndex}>
+              <TableRow  hover role='checkbox' tabIndex={-1} key={rowIndex}>
                 {columns.map(column => {
                   const value = row[column.id];
                   

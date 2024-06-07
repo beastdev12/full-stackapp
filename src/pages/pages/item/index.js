@@ -19,7 +19,7 @@ const fetchData = async (request) => {
 
     const query = { data: request };
 
-    const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+    const response = await fetch(`${config.apiBaseUrl}/api/datab?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ const Dashboard = () => {
       const locationData = await fetchData("SELECT * FROM location");
 
       // Fetch products data
-      const productsData = await fetchData(`SELECT * FROM products where product=${item}`);
+      const productsData = await fetchData(`SELECT * FROM products where product='${item.replace(/"/g, '')}'`);
 
       if (productsData && locationData) {
         setData({ productsData, locationData });

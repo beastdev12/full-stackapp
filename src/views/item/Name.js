@@ -50,7 +50,7 @@ const Trophy = ({ data }) => {
 
   useEffect(() => {
     if (productData.length > 0) {
-      setStockName(productData[0].Product || 'No Product Name');
+      setStockName(productData[0].product || 'No Product Name');
       
       // ** Calculate Valuation
       let sumStock = 0;

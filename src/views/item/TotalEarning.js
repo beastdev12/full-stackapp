@@ -47,14 +47,16 @@ const TotalEarning = ({ data }) => {
           setLocationData(locationData);
 
           let sumValue = 0;
-          productsData.forEach(element => {
+          productsData.map(element => {
             sumValue += element.stock * element.saleprice;
           });
           setValuation(sumValue);
           
           let sumPrev = 0;
-          productsData.forEach(element => {
+
+          productsData.map(element => {
             if (element.previoussaleprice) {
+              
               sumPrev += element.stock * element.previoussaleprice;
             }
           });
@@ -90,46 +92,38 @@ const TotalEarning = ({ data }) => {
 
         // Call update Price function
         const query ={
-          data:`Update products set previoussaleprice=saleprice, saleprice=${valueInt} where product='${productsAtLocation[0].Product}' and locationid='${locationId}'`
+          data:`Update products set previoussaleprice=saleprice, saleprice=${valueInt} where product='${productsAtLocation[0].product}' and locationid='${locationId}'`
         }
 
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
         })
         .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
-        console.log(query.data)
       } else if (field === 'stock') {
 
         // Call update stock function
         const query ={
-          data:`Update products set stock=${valueInt} where product='${productsAtLocation[0].Product}' and locationid='${locationId}'`
+          data:`Update products set stock=${valueInt} where product='${productsAtLocation[0].product}' and locationid='${locationId}'`
         }
 
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
         })
         .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
-        console.log(query.data)
       }
     } else {
       const session = sessionStorage.getItem('userSession');
@@ -140,20 +134,17 @@ const TotalEarning = ({ data }) => {
 
         // Call insert price function
         const query ={
-          data:`Insert into products(product, saleprice, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CurDate(), (Select distinct(userid) from users where sessionid='${session}') )`
+          data:`Insert into products(product, saleprice, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CURRENT_DATE, (Select distinct(userid) from users where sessionid='${session}') )`
         }
 
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
         })
         .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
@@ -161,11 +152,11 @@ const TotalEarning = ({ data }) => {
 
         // Call insert stock function
         const query ={
-          data:`Insert into products(product, stock, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CurDate(), (Select distinct(userid) from users where sessionid='${session}') )`
+          data:`Insert into products(product, stock, locationid, UpdatedDate, updatedby) VALUES('${productName}', ${valueInt}, '${locationId}', CURRENT_DATE, (Select distinct(userid) from users where sessionid='${session}') )`
         }
 
         // Make a POST request to your Express server endpoint
-        fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

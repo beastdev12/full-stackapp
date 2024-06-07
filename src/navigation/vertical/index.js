@@ -83,7 +83,7 @@ return () => clearInterval(interval);
         {
           title: 'Dashboard',
           icon: HomeOutline,
-          path: '/',
+          path: '/pages/dashboard',
         },
         {
           title: 'Manage Inventory',
@@ -100,7 +100,7 @@ return () => clearInterval(interval);
         {
           title: 'Dashboard',
           icon: HomeOutline,
-          path: '/',
+          path: '/pages/dashboard',
         },
         {
           title: 'Manage Inventory',
@@ -138,7 +138,7 @@ return () => clearInterval(interval);
         {
           title: 'Dashboard',
           icon: HomeOutline,
-          path: '/',
+          path: '/pages/dashboard',
         },
         {
           title: 'Manage Inventory',
@@ -150,7 +150,7 @@ return () => clearInterval(interval);
         {
           title: 'Dashboard',
           icon: HomeOutline,
-          path: '/',
+          path: '/pages/dashboard',
         },
       ],
     };

@@ -15,12 +15,13 @@ const fetchData = async (request, setData) => {
   };
 
   try {
-    const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+    const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
     });
+
     const result = await response.json();
     setData(result);
   } catch (error) {
@@ -46,7 +47,7 @@ return () => clearInterval(interval);
     if (userData && userData.length > 0) {
       const stats = userData.map((data, index) => ({
         id: index,
-        value: data['count(*)'],
+        value: data['count'],
         title: data['role']
       }));
       setRenderData(stats);
@@ -55,7 +56,7 @@ return () => clearInterval(interval);
 
   const renderStats = () => {
     return renderData.map((item, index) => (
-      <Grid item xs={12} sm={4} key={index}>
+      <Grid item xs={12} sm={3} key={index}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar
             variant='rounded'

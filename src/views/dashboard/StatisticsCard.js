@@ -35,7 +35,7 @@ const Connector = (request) => {
           data: request,
         };
 
-        const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
                     method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -94,10 +94,10 @@ const StatisticsCard = () => {
   var Average60 = 0;
 
   var data = null;
-  data = connector('SELECT Sum(stock) from products where stock !=0 or stock is not null');
+  data = Connector(`SELECT SUM(stock) FROM products WHERE stock != '0' AND stock IS NOT NULL`);
   if (data && data.length > 0) {
 
-    const count = data[0]["Sum(stock)"];
+    const count = data[0]["sum"];
     totalStock = count-1;
   }
   

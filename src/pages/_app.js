@@ -61,7 +61,7 @@ const App = props => {
       // Your authentication logic here
       // If user is not authenticated, redirect to login page
       if (!isAuthenticated) {
-        router.push('/pages/login');
+        router.push('/');
       }
     };
 

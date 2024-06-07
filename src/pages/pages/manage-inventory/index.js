@@ -4,7 +4,26 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'; // Ensure this path is correct
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'; 
+
+// Example of dynamic import
+import dynamic from 'next/dynamic';
+
+const StatisticsCard = dynamic(() => import('src/views/manage-inventory/StatisticsCard'), {
+  ssr: false,
+});
+
+const TableProduct = dynamic(() => import('src/views/manage-inventory/TableProducts'), {
+  ssr: false,
+});
+
+const AddStockCard = dynamic(() => import('src/views/manage-inventory/AddStockCard'), {
+  ssr: false,
+});
+
+const RemoveStockCard = dynamic(() => import('src/views/manage-inventory/RemoveStockCard'), {
+  ssr: false,
+});
 
 const BlurBackground = styled('div')(({ blur }) => ({
   position: 'fixed',
@@ -29,8 +48,7 @@ const AddCard = ({ isOpen, onClose }) => (
   <BlurBackground blur={5}>
     <CenteredCard>
       <CardContent>
-        {/* AddStockCard Component should be here */}
-        Add Stock Component
+        <AddStockCard isOpen={isOpen} onClose={onClose}/>
       </CardContent>
     </CenteredCard>
   </BlurBackground>
@@ -40,8 +58,7 @@ const RemoveCard = ({ isOpen, onClose }) => (
   <BlurBackground blur={5}>
     <CenteredCard>
       <CardContent>
-        {/* RemoveStockCard Component should be here */}
-        Remove Stock Component
+      <RemoveStockCard isOpen={isOpen} onClose={onClose}/>
       </CardContent>
     </CenteredCard>
   </BlurBackground>
@@ -60,8 +77,7 @@ const Dashboard = () => {
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={8} lg={8}>
-          {/* StatisticsCard Component should be here */}
-          Statistics Card Component
+          <StatisticsCard/>
         </Grid>
         <Grid item xs={12} md={4} lg={4}>
           <Grid container spacing={2}>
@@ -103,7 +119,7 @@ const Dashboard = () => {
         )}
         <Grid item xs={12} md={12} lg={12}>
           {/* TableProducts Component should be here */}
-          Table Products Component
+          <TableProduct/>
         </Grid>
       </Grid>
     </ApexChartWrapper>

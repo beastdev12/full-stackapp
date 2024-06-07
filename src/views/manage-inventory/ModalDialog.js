@@ -47,12 +47,13 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
   const UpdateProductPrice = () => {
     const addQueryPOST= () => {
       const query = {
+
         // Define your query parameters here
-        data: `Update products set saleprice=${productInputPrice}, previoussaleprice=saleprice, locationid=(select locationid from location where address='${content.trim().split("_price")[0]}'), updatedDate=curDate(), updatedby=(Select userid from users where sessionid='${session}') where product ='${title['name'].trim()}'`,
+        data: `Update products set saleprice=${productInputPrice}, previoussaleprice=saleprice, locationid=(select locationid from location where address='${content.trim().split("_price")[0]}'), updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${title['name'].trim()}'`,
       };
     
       // Make a POST request to your Express server endpoint
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/datab?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -60,22 +61,21 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-      console.log(query.data)
     }
 
     const updateQueryPOST= () => {
       const query = {
+
         // Define your query parameters here
-        data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(curdate(), curTime(), (select distinct(userid) from users where sessionid='${session}'), (select locationid from location where address='${content.trim().split("_price")[0]}'), 'Price', ${productInputPrice}, '${title['name'].trim()}')`,
+        data: `insert into updatelog(date, time, userid, locationid, type, amount, product) values(CURRENT_DATE, CURRENT_TIMESTAMP, (select distinct(userid) from users where sessionid='${session}'), (select locationid from location where address='${content.trim().split("_price")[0]}'), 'Price', ${productInputPrice}, '${title['name'].trim()}')`,
       };
       
       // Make a POST request to your Express server endpoint
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -88,7 +88,6 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-      console.log(query.data)
     }
 
     addQueryPOST();
@@ -107,7 +106,6 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
   const handlePriceInputChange = (event) => {
     const input = event.target.value;
     setProductInputPrice(input);
-    console.log(productInputPrice)
   }
 
   return (

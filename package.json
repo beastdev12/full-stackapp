@@ -35,7 +35,7 @@
     "themeselection"
   ],
   "scripts": {
-    "main": "concurrently \"npm run build\" \"npm run backend\"",
+    "main": "concurrently \"npx next\" \"npm run backend\"",
     "dev": "npm run frontend",
     "build": "next build",
     "start": "next start",
@@ -73,6 +73,7 @@
     "net": "^1.0.2",
     "next": "^14.2.3",
     "nprogress": "^0.2.0",
+    "pg": "^8.12.0",
     "public-ip": "^6.0.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.3.9",

@@ -56,7 +56,7 @@ const DepositWithdraw = () => {
   const fetchData = async (query) => {
     try {
 
-      const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams({ data: query })}`, {
+      const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams({ data: query })}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

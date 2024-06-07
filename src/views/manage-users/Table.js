@@ -20,7 +20,7 @@ const fetchData = async (request, setData) => {
   };
 
   try {
-    const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+    const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -90,12 +90,14 @@ const DashboardTable = () => {
                 {columns.map(column => {
                   const value = row[column.id];
                   if (column.id === 'name') {
+                    
                     return (
                       <TableCell key={column.id} align={column.align}>
                         <Typography variant='title' sx={{ fontWeight: 600 }}>{value}</Typography>
                       </TableCell>
                     );
                   } else if (column.id === 'role') {
+
                     return (
                       <TableCell key={column.id} align={column.align}>
                         <Chip
@@ -112,12 +114,12 @@ const DashboardTable = () => {
                     );
                   }
                   
-return (
-                    <TableCell key={column.id} align={column.align}>
-                      {value}
-                    </TableCell>
-                  );
-                })}
+                  return (
+                      <TableCell key={column.id} align={column.align}>
+                        {value}
+                      </TableCell>
+                    );
+                  })}
               </TableRow>
             ))}
           </TableBody>

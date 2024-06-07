@@ -36,7 +36,7 @@ const Connector = (request) => {
           data: request,
         };
 
-        const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+        const response = await fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -93,23 +93,23 @@ const StatisticsCard = () => {
   var Average30 = 0;
   var Average45 = 0;
   var data = null;
-  data = Connector('Select Sum(distinct(stock)) as tStock from products where product is not NULL');
+  data = Connector('SELECT SUM(stock) AS tStock FROM products WHERE product IS NOT NULL;');
   if (data && data.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
-    const count = data[0]["tStock"];
+    const count = data[0]["tstock"];
     totalStock = count;
   }
-  data = Connector("Select SUM(distinct(stock*saleprice)) as valuation from products WHERE saleprice != NULL OR saleprice != '' OR saleprice != ' ' ");
+  data = Connector("SELECT SUM(stock *saleprice) AS valuation FROM products WHERE saleprice IS NOT NULL AND stock is not null;");
   if (data && data.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     const count = data[0]['valuation'];
-    Average30 = count.toFixed(2);
+    Average30 = count;
   }
-  data = Connector("Select SUM(distinct(stock*previoussaleprice)) as valuation from products WHERE previoussaleprice != NULL OR previoussaleprice != '' OR previoussaleprice != ' ' ");
+  data = Connector("SELECT SUM(stock * previoussaleprice) AS valuation FROM products WHERE previoussaleprice IS NOT NULL AND stock is not null;");
   if (data && data.length > 0) {
     // Access the value of "COUNT(product)" property of the first object in the array
     const count = data[0]['valuation'];
-    Average45 = count ===null ? 0:count.toFixed(2);
+    Average45 = count === null ? 0:count;
   }
 
   const salesData = [

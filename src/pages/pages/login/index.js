@@ -115,7 +115,7 @@
 
         data:`update users set sessionid='${session}', lastlogin=CurDate() where userid = '${userid}'`,
       }
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/userSession?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/userSession?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -135,7 +135,7 @@
       let query = {
         data: request,
       };
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/auth?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/auth?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -153,7 +153,7 @@
           setIsAuthenticated(true);
           sessionStorage.setItem('userSession', session);
           userSessionCall(session);
-          router.push(`/`);
+          router.push(`/pages/dashboard`);
         }
         else{
           setIsLoginError(true);
@@ -256,44 +256,3 @@
   LoginPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
 
   export default LoginPage
-
-  /**
-   select case when password = 'Rajput@2005' then 1 else 0 end AS passwords from users where userid = 'Udev0012';
-
-
-   <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Typography variant='body2' sx={{ marginRight: 2 }}>
-                  New on our platform?
-                </Typography>
-                <Typography variant='body2'>
-                  <Link passHref href='/pages/register'>
-                    <LinkStyled>Create an account</LinkStyled>
-                  </Link>
-                </Typography>
-              </Box>
-              <Divider sx={{ my: 5 }}>or</Divider>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Link href='/' passHref>
-                  <IconButton component='a' onClick={e => e.preventDefault()}>
-                    <Facebook sx={{ color: '#497ce2' }} />
-                  </IconButton>
-                </Link>
-                <Link href='/' passHref>
-                  <IconButton component='a' onClick={e => e.preventDefault()}>
-                    <Twitter sx={{ color: '#1da1f2' }} />
-                  </IconButton>
-                </Link>
-                <Link href='/' passHref>
-                  <IconButton component='a' onClick={e => e.preventDefault()}>
-                    <Github
-                      sx={{ color: theme => (theme.palette.mode === 'light' ? '#272727' : theme.palette.grey[300]) }}
-                    />
-                  </IconButton>
-                </Link>
-                <Link href='/' passHref>
-                  <IconButton component='a' onClick={e => e.preventDefault()}>
-                    <Google sx={{ color: '#db4437' }} />
-                  </IconButton>
-                </Link>
-              </Box>
-  */

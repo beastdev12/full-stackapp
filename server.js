@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./db'); // Import the database connection function
 const util = require('util');
+const connecter = require('./connecter')
 
 const app = express();
 
@@ -20,6 +21,8 @@ const axios = require('axios');
 // Middleware
 app.use(cors());
 app.use(express.json()); // To parse JSON request bodies
+
+
 
 // Function to handle queries
 const queryhandler = async (dataQuery) => {

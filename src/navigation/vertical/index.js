@@ -1,7 +1,5 @@
+import React, { useState, useEffect } from 'react';
 import config from 'config.js';
-import { useState, useEffect } from 'react';
-
-// ** Icon imports
 import Login from 'mdi-material-ui/Login';
 import Table from 'mdi-material-ui/Table';
 import CubeOutline from 'mdi-material-ui/CubeOutline';
@@ -20,12 +18,15 @@ const fetchData = async (request, setData) => {
   };
 
   try {
-    const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+    const response = await fetch(`${config.apiBaseUrl}/api/datab?${new URLSearchParams(query)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const result = await response.json();
     setData(result);
   } catch (error) {
@@ -33,24 +34,24 @@ const fetchData = async (request, setData) => {
   }
 };
 
-const Navigation = ({isAuthenticated}) => {
-
+const Navigation = ({ isAuthenticated }) => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     if (isAuthenticated) {
       const fetchUserData = async () => {
         const session = sessionStorage.getItem('userSession');
-        await fetchData(`select * from users where sessionid ='${session}'`, setUserData);
+        if (session) {
+          await fetchData(`SELECT * FROM users WHERE sessionid = '${session}'`, setUserData);
+        }
       };
       fetchUserData();
       const interval = setInterval(fetchUserData, 20 * 1000); // Fetch data every 20 seconds
-      
-return () => clearInterval(interval);
+
+      return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
 
-  // Role-based navigation items
   const getNavigationItems = (role) => {
     const commonItems = [
       {
@@ -155,18 +156,21 @@ return () => clearInterval(interval);
       ],
     };
 
-    return roleBasedItems[role.toLowerCase()] || commonItems;
+    // Check if role is valid and return the corresponding items or common items
+    if (role && roleBasedItems[role.toLowerCase()]) {
+      
+      return roleBasedItems[role.toLowerCase()];
+    }
+
+    return commonItems;
   };
 
-  // Handle the case where userData is not yet available
-  if (!userData || userData.length === 0) {
-
+  if (!userData) {
     return [];
   }
 
-  // Assuming userData has a 'role' field
-  const userRole = userData[0]?.role;
-
+  const userRole = userData[0]?.role || 'guest'; // Use 'guest' as a fallback if role is undefined
+  
   return getNavigationItems(userRole);
 };
 

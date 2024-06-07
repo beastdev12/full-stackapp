@@ -177,7 +177,7 @@ const AddStockCard = ({ isOpen, onClose }) => {
       const addQueryPOST= () => {
         const query = {
           
-          data: `Update products set stock=${amountInputValue}+CAST(stock as numeric), updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
+          data: `Update products set stock=${amountInputValue}+stock, updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
         };
       
         

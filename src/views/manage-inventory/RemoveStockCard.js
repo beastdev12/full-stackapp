@@ -28,7 +28,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
       };
   
       // Make a POST request to your Express server endpoint
-      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}/api/data?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -151,7 +151,7 @@ const RemoveStockCard = ({ isOpen, onClose }) => {
       const removeQueryPOST= () => {
         const query = {
           // Define your query parameters here
-          data: `Update products set stock=CAST(stock as NUMERIC)-${amountInputValue}, updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
+          data: `Update products set stock=stock-${amountInputValue}, updatedDate=CURRENT_DATE, updatedby=(Select userid from users where sessionid='${session}') where product ='${productInputValue}' and locationid='${locationInputValue}'`,
         };
       
         // Make a POST request to your Express server endpoint

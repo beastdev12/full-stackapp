@@ -53,7 +53,7 @@ const ModalDialog = ({ title, content, open, onClose, onUpdate}) => {
       };
     
       // Make a POST request to your Express server endpoint
-      fetch(`${config.apiBaseUrl}/api/datab?${new URLSearchParams(query)}`, {
+      fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams(query)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

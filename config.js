@@ -5,7 +5,7 @@ import ShieldAccount from 'mdi-material-ui/ShieldAccount'
 import AccountWrench from 'mdi-material-ui/AccountWrench'
 // config.js
 const config = {
-    apiBaseUrl: 'http://192.168.1.110',
+    apiBaseUrl: 'https://full-stackapp-api.vercel.app',
     apiBasePort: 3001,
     rolekey : {
       Admin: { color: 'primary', icon: <ShieldAccount/>},

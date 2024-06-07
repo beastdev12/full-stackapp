@@ -43,26 +43,27 @@ const CustomDividerHorizontal = styled(Divider)(({ theme }) => ({
 
 const DepositWithdraw = () => {
   const router = useRouter();
-  const { item: selectedItem } = router.query;
+  
+  const Selecteditem = router.query.item;
+  
+  
+
   const [depositData, setDepositData] = useState([]);
   const [withdrawData, setWithdrawData] = useState([]);
 
   const fetchData = async (query) => {
     try {
-      const response = await fetch(
-        `${config.apiBaseUrl}/api/datab?${new URLSearchParams({ data: query })}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      
+      const response = await fetch(`${config.apiBaseUrl}:${config.apiBasePort}/api/data?${new URLSearchParams({ data: query })}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      
+      const data = await response.json();
 
-      return response.json();
+    return data;
     } catch (error) {
       console.error('Error fetching data:', error);
 

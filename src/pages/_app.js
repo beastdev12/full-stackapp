@@ -86,7 +86,7 @@ const App = props => {
       <SettingsProvider>
         <SettingsConsumer>
           {({ settings }) => {
-            
+
             return <ThemeComponent settings={settings} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>{getLayout(<Component isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} {...pageProps} />)}</ThemeComponent>
           }}
         </SettingsConsumer>

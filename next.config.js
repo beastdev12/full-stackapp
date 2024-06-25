@@ -7,6 +7,9 @@ module.exports = {
     esmExternals: false,
     jsconfigPaths: true // enables it for both jsconfig.json and tsconfig.json
   },
+  future: {
+    webpack5: true,
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Exclude 'fs' module from client-side bundle

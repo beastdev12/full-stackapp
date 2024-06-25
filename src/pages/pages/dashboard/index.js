@@ -9,20 +9,22 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts';
 // Example of dynamic import
 import dynamic from 'next/dynamic';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 const TableProduct = dynamic(() => import('src/views/dashboard/TableProduct'), {
   ssr: false,
+  loading: () => <CircularProgress />, // Add a loading component for better UX
 });
 
 const StatisticsCard = dynamic(() => import('src/views/dashboard/StatisticsCard'), {
   ssr: false,
+  loading: () => <CircularProgress />,
 });
 
 const DepositWithdraw = dynamic(() => import('src/views/dashboard/DepositWithdraw'), {
   ssr: false,
+  loading: () => <CircularProgress />,
 });
-
-
-import CircularProgress from '@mui/material/CircularProgress';
 
 const Dashboard = () => {
   const [userSession, setUserSession] = useState(null);

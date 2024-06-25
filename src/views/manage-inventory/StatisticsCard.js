@@ -1,7 +1,4 @@
 import { useState, useEffect } from 'react';
-
-const mysql = require('mysql');
-
 import config  from 'config.js';
 
 // ** MUI Imports
@@ -46,7 +43,7 @@ const Connector = (request) => {
 
     fetchData();
     const interval = setInterval(fetchData, 20 *1000); // Fetch data every 20 seconds
-    
+
 return () => clearInterval(interval);
   }, [request]);
 
@@ -147,10 +144,10 @@ const StatisticsCard = () => {
                 <Box sx={{ display: 'grid', gridTemplateRows: 'auto auto', gridTemplateColumns: '1fr auto', alignItems: 'center' }}>
                   {/* First row */}
                   <Typography variant='caption' sx={{ gridColumn: '1 /span 2', gridRow: '1' }}>{item.title}</Typography>
-                
+
                   {/* Second row */}
                   <Typography variant='h6' >{item.stats}</Typography>
-                
+
                   {/* Second column */}
                   <Box sx={{display: 'flex', alignItems: 'centre' }}>
                     {item.trend && (
@@ -168,7 +165,7 @@ const StatisticsCard = () => {
                             color: item.trend === 'positive' ? 'error.main' : 'success.main'
                           }}
                         >{item.trendNumber}
-                        
+
                         </Typography>
                       </>
                     )}

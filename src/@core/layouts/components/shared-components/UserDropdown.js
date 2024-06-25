@@ -23,7 +23,6 @@ import LogoutVariant from 'mdi-material-ui/LogoutVariant'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import MessageOutline from 'mdi-material-ui/MessageOutline'
 import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import { typeOf } from 'tls';
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -55,7 +54,7 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
 
     // ** States
     const [username, setUsername] = useState(null);
-    
+
     const [userRole, setUserRole] = useState(null);
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -66,15 +65,15 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
     useEffect(() => {
       const session = sessionStorage.getItem('userSession');
       setUserSession(session);
-1        
+1
       if (isAuthenticated && session) {
-        
+
       }
-      
+
     }, [isAuthenticated]);
-    
+
     const handleDropdownOpen = event => {
-      
+
       setAnchorEl(event.currentTarget)
 
       const fetchData = async () => {
@@ -92,7 +91,7 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
             },
             body: JSON.stringify(query),
           });
-          
+
           const data = await response.json();
 
           if (data && data.length > 0) {
@@ -110,7 +109,7 @@ const UserDropdown = ( { isAuthenticated, setIsAuthenticated } ) => {
       };
       fetchData();
     }
-  
+
     const handleDropdownClose = url => {
       if (url) {
         router.push(url)

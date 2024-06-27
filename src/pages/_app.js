@@ -26,7 +26,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // ** Global css styles
 import '../../styles/globals.css'
-import { Icon } from '@mui/material'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -52,15 +51,15 @@ const App = props => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   const router = useRouter();
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
   useEffect(() => {
     const checkAuth = async () => {
+
       // Your authentication logic here
       // If user is not authenticated, redirect to login page
-      if (!isAuthenticated) {
+      if (!isAuthenticated && router.pathname != '/') {
         router.push('/');
       }
     };

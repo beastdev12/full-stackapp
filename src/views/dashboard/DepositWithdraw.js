@@ -13,13 +13,7 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import { styled, theme } from '@mui/material/styles';
 
-const statusObj = {
-  admin: { color: 'primary' },
-  developer: { color: 'info' },
-  professional: { color: 'success' },
-  resigned: { color: 'warning' },
-  rejected: { color: 'error' }
-}
+const statusObj = config.rolekey;
 
 // Styled Divider component
 const Divider = styled(MuiDivider)(({ theme }) => ({

@@ -12,13 +12,7 @@ import { styled } from '@mui/material/styles';
 import config from 'config.js'; // Ensure this path is correct
 
 // Status Object for Chip Colors
-const statusObj = {
-  admin: { color: 'primary' },
-  developer: { color: 'info' },
-  resigned: { color: 'warning' },
-  rejected: { color: 'error' },
-  professional: { color: 'success' },
-};
+const statusObj = config.rolekey;
 
 // Styled Divider component for layout adjustments
 const CustomDivider = styled(Divider)(({ theme }) => ({
